@@ -9,14 +9,16 @@
 ## 说明  
 方式一：  
 在本项目 Issues 中创建问题，按需填写即可发起定制构建。  
-【👉[快速创建](https://wjz304.github.io)】 【👉[图文说明](https://github.com/wjz304/Redpill_CustomBuild/blob/main/guide/Issues.md)】 【👉[参考示例 issues#1](https://github.com/wjz304/Redpill_CustomBuild/issues/1)】  
-__感谢 [hoping](https://github.com/htmambo) 大佬制作的 UI界面__
+【👉[快速创建](https://wjz304.github.io)】 【👉[图文说明](https://github.com/wjz304/Redpill_CustomBuild/blob/main/guide/Issues.md)】 【👉[参考示例issue#1](https://github.com/wjz304/Redpill_CustomBuild/issues/1)】  【👉[驱动支持表](https://xpenology.com/forum/topic/4980-gt-hardware-supported-list-for-dsm-52-lt/)】  【👉[json错误检测](https://json-online.com/check/)】  
+
+__感谢 [hoping](https://github.com/htmambo) 大佬制作的 UI界面__  
 
 1. 构建成功 Issues 会自动 closed。  
 2. 构建失败 后请调整参数重新创建Issues发起重新构建, 或者修改body后 Close Issue + Reopen 重新触发。（触发编译：open, reopen）。  
 3. ext 存在兼容性问题, 添加是请与型号和版本对应, 并酌情添加 (不恰当的例子：r8125 不支持 DS920+ 的 7.0.1-42218 版本, 添加会编译失败)  
 4. 再次构建，直接 reopen 会再次触发构建。
-5. 打上 'schedule' 标签 将会每日构建(通过Reopen的方式, 因此如果构建失败Issues没有Closed 将终止).
+5. 打上 'schedule' 标签 将会每日构建(通过Reopen的方式, 因此如果构建失败Issues没有Closed 将终止).  
+
 
 方式二：   
 fork 本项目 通过 Actions 填写相关参数进行构建。
@@ -67,7 +69,6 @@ jun       | ×    |"0"             | 仅7.0.1-42218 版本可以选择jun模式�
 3. 驱动默认集成 acpid, misc, virtio, dtb-static(only DS920+)。
 4. SN&MAC算号使用 pocopico 的脚本。
 5. 最新支持body换行和自动去除控制字符，但是json格式错误无法处理，
-
 
 
 ## 鸣谢
