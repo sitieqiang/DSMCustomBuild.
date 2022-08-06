@@ -19,6 +19,10 @@ __感谢 [hoping](https://github.com/htmambo) 大佬制作的 UI界面__
 4. 再次构建，直接 reopen 会再次触发构建。
 5. 打上 'schedule' 标签 将会每日构建(通过Reopen的方式, 因此如果构建失败Issues没有Closed 将终止).  
 
+```diff 
++ 友情提示
+- 7.1 选 jumkey 98% 编译失败，不用尝试了.
+```
 
 方式二：   
 fork 本项目 通过 Actions 填写相关参数进行构建。
