@@ -15,7 +15,7 @@ on:
       platform:
         description: '请选择你需要编译的型号'
         required: true
-        default: 'DS918+' 
+        default: 'DS3622xs+' 
         type: choice
         options:
         - DS3615xs
