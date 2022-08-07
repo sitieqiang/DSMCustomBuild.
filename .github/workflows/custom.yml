@@ -191,15 +191,15 @@ jobs:
       - name: Set Issues Info
         if: github.event_name == 'issues' && success()
         run: |
-          echo "issuenumber: ${{ steps.get-issues.outputs.issuenumber }}"
-          echo "issueauth:   ${{ steps.get-issues.outputs.issueauth }}"
-          echo "issuetitle:  ${{ steps.get-issues.outputs.issuetitle }}"
-          echo "issuebody:   ${{ steps.get-issues.outputs.issuebody }}"
+          echo issuenumber: "${{ steps.get-issues.outputs.issuenumber }}"
+          echo issueauth:   "${{ steps.get-issues.outputs.issueauth }}"
+          echo issuetitle:  "${{ steps.get-issues.outputs.issuetitle }}"
+          echo issuebody:   "${{ steps.get-issues.outputs.issuebody }}"
 
-          echo "issuenumber=${{ steps.get-issues.outputs.issuenumber }}" >> $GITHUB_ENV
-          echo "issueauth=${{ steps.get-issues.outputs.issueauth }}" >> $GITHUB_ENV
-          echo "issuetitle=${{ steps.get-issues.outputs.issuetitle }}" >> $GITHUB_ENV
-          echo "issuebody=${{ steps.get-issues.outputs.issuebody }}" >> $GITHUB_ENV
+          echo "issuenumber="${{ steps.get-issues.outputs.issuenumber }}"" >> $GITHUB_ENV
+          echo "issueauth="${{ steps.get-issues.outputs.issueauth }}"" >> $GITHUB_ENV
+          echo "issuetitle="${{ steps.get-issues.outputs.issuetitle }}"" >> $GITHUB_ENV
+          echo "issuebody="${{ steps.get-issues.outputs.issuebody }}"" >> $GITHUB_ENV
 
       - name: Get Build Info
         uses: jannekem/run-python-script-action@v1.2
@@ -412,19 +412,19 @@ jobs:
 
       - name: Echo Build Info
         run: |
-          echo "issues:    ${{ steps.info.outputs.issues }}"
-          echo "iscustom:  ${{ steps.info.outputs.iscustom }}"
-          echo "errinfo:   ${{ steps.info.outputs.errinfo }}"
-          echo "platform:  ${{ steps.info.outputs.platform }}"
-          echo "version:   ${{ steps.info.outputs.version }}"
-          echo "map:       ${{ steps.info.outputs.map }}"
-          echo "dtb:       ${{ steps.info.outputs.dtb }}"
-          echo "sn:        ${{ steps.info.outputs.sn }}"
-          echo "mac:       ${{ steps.info.outputs.mac }}"
-          echo "usb:       ${{ steps.info.outputs.usb }}"
-          echo "ext:       ${{ steps.info.outputs.ext }}"
-          echo "exp:       ${{ steps.info.outputs.exp }}"
-          echo "jun:       ${{ steps.info.outputs.jun }}"
+          echo issues:    "${{ steps.info.outputs.issues }}"
+          echo iscustom:  "${{ steps.info.outputs.iscustom }}"
+          echo errinfo:   "${{ steps.info.outputs.errinfo }}"
+          echo platform:  "${{ steps.info.outputs.platform }}"
+          echo version:   "${{ steps.info.outputs.version }}"
+          echo map:       "${{ steps.info.outputs.map }}"
+          echo dtb:       "${{ steps.info.outputs.dtb }}"
+          echo sn:        "${{ steps.info.outputs.sn }}"
+          echo mac:       "${{ steps.info.outputs.mac }}"
+          echo usb:       "${{ steps.info.outputs.usb }}"
+          echo ext:       "${{ steps.info.outputs.ext }}"
+          echo exp:       "${{ steps.info.outputs.exp }}"
+          echo jun:       "${{ steps.info.outputs.jun }}"
 
       - name: Add Issues labels
         if: steps.info.outputs.issues == 'true' && steps.info.outputs.iscustom == 'true'
