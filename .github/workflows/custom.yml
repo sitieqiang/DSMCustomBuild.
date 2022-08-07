@@ -183,6 +183,12 @@ jobs:
             issuebody = issuebody.replace(/\u2029/g, "");  //    段落分隔符
             issuebody = issuebody.replace(/\uFEFF/g, "");  //    字节顺序标记
 
+            // 容错
+            issuebody = issuebody.replace(/：/g, ": ");
+            issuebody = issuebody.replace(/，/g, ", ");
+            issuebody = issuebody.replace(/“/g, "\"");
+            issuebody = issuebody.replace(/”/g, "\"");
+
             core.setOutput("issuenumber", JSON.stringify(issuenumber));
             core.setOutput("issueauth", JSON.stringify(issueauth));
             core.setOutput("issuetitle", JSON.stringify(issuetitle));
