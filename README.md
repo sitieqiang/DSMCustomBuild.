@@ -9,7 +9,7 @@
 ## 说明  
 方式一：  
 在本项目 Issues 中创建问题，按需填写即可发起定制构建。  
-【👉[快速创建](https://wjz304.github.io)】 【👉[图文说明](https://github.com/wjz304/Redpill_CustomBuild/blob/main/guide/Issues.md)】 【👉[参考示例issue#1](https://github.com/wjz304/Redpill_CustomBuild/issues/1)】  【👉[驱动支持表](https://xpenology.com/forum/topic/4980-gt-hardware-supported-list-for-dsm-52-lt/)】  【👉[json错误检测](https://json-online.com/check/)】  
+【👉[快速创建](https://wjz304.github.io/Issues.html)】 【👉[图文说明](https://github.com/wjz304/Redpill_CustomBuild/blob/main/guide/Issues.md)】 【👉[参考示例issue#1](https://github.com/wjz304/Redpill_CustomBuild/issues/1)】  【👉[驱动支持表](https://xpenology.com/forum/topic/4980-gt-hardware-supported-list-for-dsm-52-lt/)】  【👉[json错误检测](https://json-online.com/check/)】  
 
 __感谢 [hoping](https://github.com/htmambo) 大佬制作的 UI界面__  
 
@@ -20,8 +20,9 @@ __感谢 [hoping](https://github.com/htmambo) 大佬制作的 UI界面__
 5. 打上 'schedule' 标签 将会每日构建(通过Reopen的方式, 因此如果构建失败Issues没有Closed 将终止).  
 
 ```diff 
-+ 友情提示
++ 友情提示:
 - 7.1 选 jumkey 98% 编译失败，不用尝试了.
+- 只有 DS3615xs 和 DS918+ 支持 6.2.4 版本.
 ```
 
 方式二：   
