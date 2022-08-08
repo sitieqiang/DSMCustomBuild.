@@ -41,7 +41,7 @@ on:
         type: string
 
       dtb:
-        description: '请输入 dtb 文件的下载链接. (支持的文件类型: .dts、.dtb、.tar.gz、.zip)'
+        description: '【仅DS920+】请输入 dtb 文件的下载链接. (支持的文件类型: .dts、.dtb、.tar.gz、.zip)'
         required: false
         default: ''
         type: string
@@ -65,7 +65,7 @@ on:
         type: string
 
       ext: 
-        description: '请输入扩展驱动, 多个请以 "," 间隔. eg: r8125, tg3'
+        description: '请输入扩展驱动, 多个请以 "," 间隔（请酌情添加，太多起不来）. eg: r8125, tg3'
         required: false
         default: ''
         type: string
