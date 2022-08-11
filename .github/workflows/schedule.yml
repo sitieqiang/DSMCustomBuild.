@@ -12,19 +12,83 @@
 # 2. 在 https://github.com/${{ github.repository }}/settings/secrets/actions 加入上一步创建的 token
 
 
-name: Redpill Build (schedule)
+
+name: Custom Redpill(schedule)
 
 on:
+  issue_comment:
+    types: [created, edited, deleted]
+
   schedule:
     - cron: '0 0 * * *'
+
   workflow_dispatch:
 
-
 jobs:
-  matrix:
+  setlabels:
     runs-on: ubuntu-latest
+    if: github.event_name == 'issue_comment'
     outputs:
       matrix: ${{ steps.set-matrix.outputs.matrix }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@main
+
+      - name: Find schedule comments
+        id: find-comments
+        uses: actions-cool/issues-helper@v3
+        with:
+          actions: 'find-comments'
+          token: ${{ secrets.GITHUB_TOKEN }}
+          issue-number: ${{ github.event.issue.number }}
+          body-includes: 'schedule'
+
+      - name: Get Issues labels
+        id: check-comments
+        uses: actions/github-script@v6
+        with:
+          script: |
+            var labels = [];
+            var issuelabels = ${{ toJSON(github.event.issue.labels) }};
+            console.log("issuelabels: " + issuelabels);
+            for (i in issuelabels) {
+                labels.push(issuelabels[i]["name"]);
+            }
+            console.log("labels: " + labels);
+
+            var comments = ${{ steps.find-comments.outputs.comments }};
+            console.log("comments: " + comments);
+
+            var isSchedule = "false";
+            if (comments.length > 0) {
+                if (comments.at(-1)["body"].toLowerCase() == "add schedule") {
+                    isSchedule = "true";
+                }
+            }
+            console.log("isSchedule: " + isSchedule);
+
+            if (isSchedule == "true") {
+                labels.push("schedule");
+            } else {
+                var index = labels.indexOf("schedule");
+                if (index > -1) labels.splice(index, 1);
+            }
+
+            core.setOutput("isSchedule", isSchedule);
+            core.setOutput("labels", labels.join(","));
+
+      - name: Set labels
+        uses: actions-cool/issues-helper@v3
+        with:
+          actions: 'set-labels'
+          token: ${{ secrets.GITHUB_TOKEN }}
+          issue-number: ${{ github.event.issue.number }}
+          labels: ${{ steps.check-comments.outputs.labels }}
+
+
+  checklabels:
+    runs-on: ubuntu-latest
+    if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
     steps:
       - name: Checkout
         uses: actions/checkout@main
@@ -88,4 +152,3 @@ jobs:
                                 pass
                 except Exception as err:
                     print(err)
-
