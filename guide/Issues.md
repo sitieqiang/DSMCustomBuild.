@@ -25,16 +25,12 @@
 
 ## Issues 每日(循环)构建教程
 
-### 添加标签
-1. 找到你需要每日构建的 Issue，点击右侧 "Lables", 再点击 "schedule", 再点击任意空白位置。
- ![Image text](img/2022_113159_github.com.jpeg)
-2. 出现下图所示即表示标签添加成功，该 Issue 将在每日设置的时间自动重新构建。
- ![Image text](img/2022_113233_github.com.jpeg)
+### 添加/删除标签
+1. 评论 add schedule 将打上 schedule 标签。  
+2. 删除 add schedule 的评论或者增加 del schedule 评论将删除 schedule 标签。  
+ `(PS: 获取最后一条含有 schedule 关键字的评论，内容为 "add schedule" 时增加标签，否则删除)`
+ ![Image text](img/20220812001951.png)
 
-### 删除标签
-1. 找到你需要删除每日构建的 Issue，点击右侧 "Lables", 再点击 "schedule" 后面的 "X", 再点击任意空白位置。
- ![Image text](img/2022_113305_github.com.jpeg)
-2. 出现下图所示即表示标签删除成功，该 Issue 将去除每日自动重新构建。
- ![Image text](img/2022_113307_github.com.jpeg)
+
 
 

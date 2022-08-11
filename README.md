@@ -17,7 +17,7 @@ __感谢 [hoping](https://github.com/htmambo) 大佬制作的 UI界面__
 2. 构建失败 后请调整参数重新创建Issues发起重新构建, 或者修改body后 Close Issue + Reopen 重新触发。（触发编译：open, reopen）。  
 3. ext 存在兼容性问题, 添加时请与型号和版本对应, 并酌情添加 (不恰当的例子：r8125 不支持 DS920+ 的 7.0.1-42218 版本, 添加会编译失败)  
 4. 再次构建，直接 reopen 会再次触发构建。
-5. 打上 'schedule' 标签 将会每日构建(通过Reopen的方式, 因此如果构建失败Issues没有Closed 将终止).  
+5. 打上 ['schedule'](https://github.com/wjz304/Redpill_CustomBuild/blob/main/guide/Issues.md#issues-%E6%AF%8F%E6%97%A5%E5%BE%AA%E7%8E%AF%E6%9E%84%E5%BB%BA%E6%95%99%E7%A8%8B)   标签 将会每日构建(通过Reopen的方式, 因此如果构建失败Issues没有Closed 将终止).  
 
 ```diff 
 + 友情提示:
