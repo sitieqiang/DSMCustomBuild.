@@ -30,6 +30,7 @@ on:
         default: '7.1.0-42661' 
         type: choice
         options:
+        - 7.1.1-42951
         - 7.1.0-42661
         - 7.0.1-42218
         - 6.2.4-25556
@@ -220,7 +221,7 @@ jobs:
                 iscustom = 'true'
                 errinfo = ''
 
-                platform = 'DS918+'
+                platform = 'DS3622xs+'
                 version = '7.1.0-42661'
                 map = ''
                 dtb = ''
@@ -276,7 +277,7 @@ jobs:
                     iscustom = 'false'
                     errinfo = 'platform parameter error'
 
-                if not version in ['7.1.0-42661', '7.0.1-42218', '6.2.4-25556']:
+                if not version in ['7.1.1-42951', '7.1.0-42661', '7.0.1-42218', '6.2.4-25556']:
                     iscustom = 'false'
                     errinfo = 'version parameter error'
 
@@ -550,7 +551,14 @@ jobs:
           function exdsmpat() {
             pwd
             cd ./cache
-            curl -L https://cndl.synology.cn/download/DSM/release/7.1/42661-1/DSM_$1_42661.pat -o ds.pat
+            path=7.0.1/42218
+            if [ "$2" == "42661" ]; then
+              path=7.1/42661-1
+            fi
+            if [ "$2" == "42951" ]; then
+              path=7.1.1/42951
+            fi
+            curl -L https://cndl.synology.cn/download/DSM/release/${path}/DSM_$1_$2.pat -o ds.pat
             curl -L https://cndl.synology.cn/download/DSM/release/7.0.1/42218/DSM_$1_42218.pat -o oldpat.tar.gz
             mkdir synoesp && tar -C./synoesp/ -xf oldpat.tar.gz rd.gz
             cd synoesp
@@ -562,11 +570,11 @@ jobs:
             cd ..
             mkdir pat
             sudo LD_LIBRARY_PATH=synoesp/extract synoesp/extract/syno_extract_system_patch ds.pat pat || echo "extract latest pat"
-            tar -czvf $2_42661.pat -C ./pat/ . --warning=no-file-changed
+            tar -czvf $3 -C ./pat/ . --warning=no-file-changed
             ls -al
             sudo rm -rf ds.pat oldpat.tar.gz synoesp pat
             ls -al
-            sha256sum $2_42661.pat
+            sha256sum $3
             cd ..
             pwd
           }
@@ -593,13 +601,17 @@ jobs:
 
           cd redpill-load
 
+          synoplatform=$(echo ${{ steps.info.outputs.platform }} | sed 's/DS/ds/g; s/+/p/g')       # DS3622xs+ => ds3622xsp
+          synoversion=$(echo ${{ steps.info.outputs.version }} | awk -F - '{print $2}')            # 7.0.1-42218 => 42218
+
           # 7.1 解密PAT
-          if [ ${{ steps.info.outputs.version }} == '7.1.0-42661' ]; then 
-            exdsmpat ${{ steps.info.outputs.platform }} $(echo ${{ steps.info.outputs.platform }} | sed 's/DS/ds/g; s/+/p/g')
+          if [[ "${{ steps.info.outputs.version }}" > "7.0.1-42218" ]]; then 
+            newpat=${synoplatform}_${synoversion}.pat
+            exdsmpat ${{ steps.info.outputs.platform }} ${synoversion} ${newpat}
             ls -al ./cache
             configfile=./config/${{ steps.info.outputs.platform }}/${{ steps.info.outputs.version }}/config.json
             jq -r .os.sha256 ${configfile}
-            sed -i "s/$(jq -r .os.sha256 ${configfile})/$(sha256sum ./cache/$(echo ${{ steps.info.outputs.platform }} | sed 's/DS/ds/g; s/+/p/g')_42661.pat | awk '{print $1}')/g" ${configfile}
+            sed -i "s/$(jq -r .os.sha256 ${configfile})/$(sha256sum ./cache/${newpat} | awk '{print $1}')/g" ${configfile}
             jq -r .os.sha256 ${configfile}
           fi
 
@@ -610,10 +622,8 @@ jobs:
           ./ext-manager.sh add https://raw.githubusercontent.com/${repo}/redpill-load/${branch}/redpill-virtio/rpext-index.json
 
           # redpill.ko 方式一 
-          synopform=$(echo ${{ steps.info.outputs.platform }} | sed 's/DS/ds/g; s/+/p/g')
-          synomodel=${synopform}_$(echo ${{ steps.info.outputs.version }} | awk -F - '{print $2}')
           extension=$(curl -s --location "https://raw.githubusercontent.com/pocopico/rp-ext/master/redpill/rpext-index.json")
-          redpilltgz=$(curl -s --location "$(echo ${extension} | jq -r .releases.$synomodel)" | jq -r '.files[] .url')
+          redpilltgz=$(curl -s --location "$(echo ${extension} | jq -r .releases.${synoplatform}_${synoversion})" | jq -r '.files[] .url')
           [ "$(echo $redpilltgz | awk '{print $NF}')" != "$redpilltgz" ] && redpilltgz=$(echo $redpilltgz | awk '{print $1}')
           wget ${redpilltgz}
           tar zxvf $(echo ${redpilltgz} | awk -F / '{print $NF}') -C ./ 
@@ -633,11 +643,11 @@ jobs:
 
           if [ ${{ steps.info.outputs.platform }} == 'DS920+' ]; then
             ./ext-manager.sh add https://raw.githubusercontent.com/pocopico/rp-ext/master/redpill-dtb-static/rpext-index.json
-            ./ext-manager.sh _update_platform_exts ${synomodel} redpill-dtb-static
+            ./ext-manager.sh _update_platform_exts ${synoplatform}_${synoversion} redpill-dtb-static
 
             if [ -n "${{ steps.info.outputs.dtb }}" ]; then
               dtbuserfile="${{ steps.info.outputs.dtb }}"
-              dtbextfile="$(find custom -name model_${synopform}.dtb)"
+              dtbextfile="$(find custom -name model_${synoplatform}.dtb)"
               echo Copying ${dtbuserfile} to ${dtbextfile} ...
               sudo cp ${dtbuserfile} ${dtbextfile}
             fi
