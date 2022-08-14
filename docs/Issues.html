@@ -62,7 +62,7 @@
       }
     </style>
     <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
-    <script src="./dist/yaml.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/wjz304/Redpill_CustomBuild/docs/dist/yaml.js"></script>
 
     <script type="application/javascript">
       function httpGetAsync(theUrl, callback) {
@@ -77,7 +77,7 @@
 
       window.onload = function () {
         httpGetAsync(
-          "https://raw.githubusercontent.com/wjz304/Redpill_CustomBuild/main/.github/workflows/custom.yml",
+          "https://cdn.jsdelivr.net/gh/wjz304/Redpill_CustomBuild/.github/workflows/custom.yml",
           function (result) {
             yaml = YAML.parse(result);
             if (yaml.hasOwnProperty("on")) {
@@ -155,7 +155,7 @@
       }
       function createExtBtn() {
         httpGetAsync(
-          "https://raw.githubusercontent.com/pocopico/rp-ext/main/exts",
+          "https://cdn.jsdelivr.net/gh/pocopico/rp-ext/exts",
           function (result) {
             var exts = result.trim().split("\n");
             var html = "";
