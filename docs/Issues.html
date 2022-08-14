@@ -22,12 +22,6 @@
       crossorigin="anonymous"
       media="all"
       rel="stylesheet"
-      href="https://github.githubassets.com/assets/light-92c7d381038e.css"
-    />
-    <link
-      crossorigin="anonymous"
-      media="all"
-      rel="stylesheet"
       href="https://github.githubassets.com/assets/dark-d4a90c367f0c.css"
     />
 
@@ -43,18 +37,6 @@
       rel="stylesheet"
       href="https://github.githubassets.com/assets/global-ef47aa3710b2.css"
     />
-    <link
-      crossorigin="anonymous"
-      media="all"
-      rel="stylesheet"
-      href="https://github.githubassets.com/assets/github-fee1576e5bd2.css"
-    />
-    <link
-      crossorigin="anonymous"
-      media="all"
-      rel="stylesheet"
-      href="https://github.githubassets.com/assets/actions-5e1227d9a285.css"
-    />
     <style>
       select,
       input {
@@ -65,6 +47,27 @@
     <script src="https://cdn.jsdelivr.net/gh/wjz304/Redpill_CustomBuild/docs/dist/yaml.js"></script>
 
     <script type="application/javascript">
+      var platforms = {};   //支持的机型列表
+      var versions = {};    //支持的系统列表
+      var releases = {};
+
+      function initPlatforms(list)
+      {
+        list = list.sort();
+        for(var i in list){
+          var key = list[i].replace('DS', 'ds').replace('+', 'p');
+          platforms[key] = list[i];
+        }
+      }
+      function initVersions(list)
+      {
+        list = list.sort();
+        for(var i in list) {
+          j = list[i].split('-');
+          // tmp.push(j[1]);
+          versions[j[1]] = list[i];
+        }
+      }
       function httpGetAsync(theUrl, callback) {
         let xmlHttpReq = new XMLHttpRequest();
         xmlHttpReq.onreadystatechange = function () {
@@ -82,7 +85,6 @@
             yaml = YAML.parse(result);
             if (yaml.hasOwnProperty("on")) {
               inputs = yaml.on.workflow_dispatch.inputs;
-              console.log(inputs);
               $("#inputs").find("div").remove(); //html('');
               var html = "";
               html += createInput(
@@ -95,6 +97,11 @@
               );
               for (var field in inputs) {
                 var ff = inputs[field];
+                if(field == 'platform') {
+                  initPlatforms(ff.options);
+                } else if ( field=='version') {
+                  initVersions(ff.options);
+                }
                 var dft = "";
                 var need = false;
                 if (ff.hasOwnProperty("required")) need = ff.required;
@@ -123,17 +130,60 @@
               }
               $("#inputs").prepend(html);
               createExtBtn();
+              createOtherRule();
             } else {
               console.log(yaml);
             }
           }
         );
       };
-
+      function createOtherRule()
+      {
+        //这里是支持的机型和系统版本的对应关系
+        httpGetAsync(
+          'https://cdn.jsdelivr.net/gh/pocopico/rp-ext/redpill/rpext-index.json',
+          function(result) {
+            result = JSON.parse(result);
+            if(result.hasOwnProperty('releases')) {
+              var xreleases = new Array;
+              var k = 0;
+              for(var i in result.releases){
+                var tmp = i.split('_');
+                if(tmp.length == 2) {
+                  xreleases[k] = i;
+                  k ++;
+                }
+              }
+              xreleases = xreleases.sort();
+              for(var i in xreleases){
+                var tmp = xreleases[i].split('_');
+                if(tmp.length == 2) {
+                  if(versions.hasOwnProperty(tmp[1])) {
+                    if(!releases.hasOwnProperty(tmp[0])) {
+                      releases[tmp[0]] = {};
+                    }
+                    releases[tmp[0]][tmp[1]] = versions[tmp[1]];
+                  }
+                }
+              }
+              $('#platform').on('change', changePlatform);
+              changePlatform();
+            }
+          }
+        );
+      }
+      function changePlatform(){
+          platform = $('#platform').val().replace('DS', 'ds').replace('+', 'p');
+          options = releases[platform];
+          $('#version').empty();
+          $('#version').append($('<option></option>').val('').html('请选择'));
+          $.each(options, function(i, p) {
+              $('#version').append($('<option></option>').val(p).html(p));
+          });
+      }
       function processext(ext) {
         var obj = $("#ext_btn_" + ext.replace(/\./g, "·"));
         var exts = $("#ext").val().split(",");
-        console.log(exts);
         if (obj.hasClass("btn-danger")) {
           //要删除掉已经输入的内容
           exts.map((val, i) => {
@@ -213,6 +263,7 @@
           name +
           '" required=""';
         html += 'name="inputs[' + name + ']"value="' + dft + '">';
+        // html += '<option value="">请选择</option>'
         for (var v in opts) {
           var addpar = "";
           if (opts[v] == dft) addpar = ' selected="selected"';
@@ -515,13 +566,31 @@
         </form>
       </div>
       <br />
-      <div id="content"></div>
-      <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+      <div id="content" class="highlight highlight-source-diff notranslate position-relative overflow-auto"></div>
+      <!-- <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script> -->
       <script>
         httpGetAsync(
-          "https://raw.githubusercontent.com/wjz304/Redpill_CustomBuild/main/tips.md",
+          "https://cdn.jsdelivr.net/gh/wjz304/Redpill_CustomBuild/tips.md",
           function (result) {
-            document.getElementById("content").innerHTML = marked.parse(result);
+            // var html = marked.parse(result).replace('<pre>', "<pre>\n");
+            // 引入的文件就是一段md格式的代码，这里就直接解析一下算了
+            var html = result.replace(/\`+[^\n]*\n/g,'' );
+            html = html.split("\n");
+            // html = html.splice(1, html.length-2);
+            var css = "";
+            for(var i in html) {
+              css = "";
+              if(html[i].substr(0, 1) == '-') {
+                css="pl-md"
+              } else {
+                css="pl-mi1";
+              }
+              if(css) {
+                html[i] = '<span class="' + css + '">' + html[i] + '</span>';
+              }
+            }
+            html = "<pre>" + html.join("\n") + "</pre>";
+            $('.highlight.highlight-source-diff').html(html);
           }
         );
       </script>
