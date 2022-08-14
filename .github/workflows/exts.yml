@@ -1,0 +1,83 @@
+#
+# Copyright (C) 2022 Ing <https://github.com/wjz304>
+# 
+# This is free software, licensed under the MIT License.
+# See /LICENSE for more information.
+#
+
+name: Get Exts
+
+on:
+  schedule:
+    - cron: '0 0 * * *'
+
+  workflow_dispatch:
+
+jobs:
+  exts:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@main
+
+      - name: Initialization environment
+        run : |
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git config --global user.name "github-actions[bot]"
+          sudo timedatectl set-timezone "Asia/Shanghai"
+
+      - name: Checkout rp-ext
+        run: |
+          git clone https://github.com/pocopico/rp-ext rp-ext
+
+      - name: Get exts
+        uses: jannekem/run-python-script-action@v1.2
+        with:
+          script: |
+            import os, json
+
+            if __name__ == '__main__':
+
+                try:
+                    root = '' # os.path.dirname(os.path.abspath(__file__))
+                    work = 'rp-ext'
+                    jext = 'rpext-index.json'
+                    exts = {}
+                    files = os.listdir(os.path.join(root, work))
+
+                    for file in files:
+                        if file.startswith('.') or file.startswith('redpill'):
+                            continue
+                        if os.path.isdir(os.path.join(root, work, file)):
+                            if os.path.exists(os.path.join(root, work, file, jext)):
+                                with open(os.path.join(root, work, file, jext), 'r') as f:
+                                    data = json.load(f)
+                                    keys = data["releases"].keys()
+                                    for key in keys:
+                                        if key in exts.keys():
+                                            exts[key].append(file)
+                                        else:
+                                            exts[key] = [ file ]
+
+                    if len(exts) > 0:
+                        print(json.dumps(exts, indent=4))
+                        with open(os.path.join(root, 'exts.json'), 'w', encoding='utf-8') as f:
+                            f.write(json.dumps(exts, indent=4))
+
+                except Exception as err:
+                    print(err)
+
+      - name: Check for changes
+        run: |
+          if [ -n "$(git status -s | grep exts.json)" ];then
+            echo "ischanges=true" >> $GITHUB_ENV
+          else
+            echo "ischanges=false" >> $GITHUB_ENV
+          fi
+
+      - name: Commit and Push
+        if: env.ischanges == 'true'
+        run: |
+          git add exts.json
+          git commit -m "update $(date +%Y-%m-%d" "%H:%M:%S)"
+          git push -f
