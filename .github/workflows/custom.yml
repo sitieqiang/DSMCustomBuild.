@@ -305,11 +305,11 @@ jobs:
                             name = 'user'
                             if os.path.exists('extract'):  
                                 shutil.rmtree('extract')
-                            if kind.extension == 'zip':
+                            if kind != None and kind.extension == 'zip':
                                 import zipfile
                                 z = zipfile.ZipFile(down, 'r')
                                 z.extractall('extract')
-                            if kind.extension in ['tar', 'gz']:
+                            if kind != None and kind.extension in ['tar', 'gz']:
                                 import tarfile
                                 z = tarfile.open(down) 
                                 z.extractall('extract')
