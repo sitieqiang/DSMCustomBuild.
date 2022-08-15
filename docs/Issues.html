@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html
-  lang="en"
+  lang="zh-Hans-CN"
   data-color-mode="auto"
   data-light-theme="light"
   data-dark-theme="dark"
@@ -216,14 +216,21 @@
             var html = "";
             let idx = 1;
             for (var i in exts) {
-              html +=
-                '<button type="button" class="btn btn-primary btn-sm mt-2" id="ext_btn_' +
-                exts[i].replace(/\./g, "·") +
-                '" onclick="return processext(\'' +
-                exts[i] +
-                '\')" autofocus="" >';
-              html += exts[i];
-              html += "</button>&nbsp;";
+              if (exts[i].endsWith("*")) {
+                html +=
+                  '<button type="button" class="btn btn-primary btn-sm mt-2" id="ext_btn_' +
+                  exts[i].replace(/\./g, "·").replace(/\*/g, "") +
+                  '" disabled="true" autofocus="" >' +
+                  exts[i] +
+                  "</button>&nbsp;";
+              } else {
+                html +=
+                  '<button type="button" class="btn btn-primary btn-sm mt-2" id="ext_btn_' +
+                  exts[i].replace(/\./g, "·") +
+                  '" onclick="return processext(\'' + exts[i] + '\')" autofocus="" >' +
+                  exts[i] +
+                  "</button>&nbsp;";
+              }
               if (idx++ % 15 == 0) html += "<br />";
             }
             $("#ext").prop("readonly", true);

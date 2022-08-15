@@ -581,7 +581,7 @@ jobs:
           sudo apt install curl bspatch jq git -y
 
           # 开始表演
-
+          echo "============================编译开始============================"
           repo=${{ steps.info.outputs.exp }}
           branch=develop
           bArgs=''
@@ -602,6 +602,7 @@ jobs:
           synoversion=$(echo ${{ steps.info.outputs.version }} | awk -F - '{print $2}')            # 7.0.1-42218 => 42218
 
           # 7.1 解密PAT
+          echo "===========================7.1 解密PAT=========================="
           if [[ "${{ steps.info.outputs.version }}" > "7.0.1-42218" ]]; then 
             newpat=${synoplatform}_${synoversion}.pat
             exdsmpat ${{ steps.info.outputs.platform }} ${synoversion} ${newpat}
@@ -613,12 +614,14 @@ jobs:
           fi
 
           # 添加必备驱动
+          echo "===========================添加必备驱动=========================="
           #./ext-manager.sh add https://raw.githubusercontent.com/${repo}/redpill-load/${branch}/redpill-boot-wait/rpext-index.json
           ./ext-manager.sh add https://raw.githubusercontent.com/${repo}/redpill-load/${branch}/redpill-acpid/rpext-index.json
           ./ext-manager.sh add https://raw.githubusercontent.com/${repo}/redpill-load/${branch}/redpill-misc/rpext-index.json
           ./ext-manager.sh add https://raw.githubusercontent.com/${repo}/redpill-load/${branch}/redpill-virtio/rpext-index.json
 
           # redpill.ko 方式一 
+          echo "=======================Download redpill.ko======================"
           extension=$(curl -s --location "https://raw.githubusercontent.com/pocopico/rp-ext/master/redpill/rpext-index.json")
           redpilltgz=$(curl -s --location "$(echo ${extension} | jq -r .releases.${synoplatform}_${synoversion})" | jq -r '.files[] .url')
           [ "$(echo $redpilltgz | awk '{print $NF}')" != "$redpilltgz" ] && redpilltgz=$(echo $redpilltgz | awk '{print $1}')
@@ -627,6 +630,7 @@ jobs:
           mv ./redpill.ko ./ext/rp-lkm/redpill-linux-v$(modinfo redpill.ko | grep vermagic | awk '{print $2}').ko
 
           # # redpill.ko 方式二 
+          # echo "========================Build redpill.ko========================"
           # git clone -b develop --depth=1 https://github.com/jumkey/redpill-lkm.git
           # # download syno toolkit
           # curl --location "https://global.download.synology.com/download/ToolChain/toolkit/7.0/broadwellnk/ds.broadwellnk-7.0.dev.txz" --output ds.broadwellnk-7.0.dev.txz
@@ -639,6 +643,7 @@ jobs:
           # cd ..
 
           if [ ${{ steps.info.outputs.platform }} == 'DS920+' ]; then
+            echo "===========================DS920+ .dtb=========================="
             ./ext-manager.sh add https://raw.githubusercontent.com/pocopico/rp-ext/master/redpill-dtb-static/rpext-index.json
             ./ext-manager.sh _update_platform_exts ${synoplatform}_${synoversion} redpill-dtb-static
 
@@ -651,6 +656,7 @@ jobs:
           fi
 
           # 添加扩展驱动
+          echo "==========================添加扩展驱动==========================="
           if [ -n "${{ steps.info.outputs.ext }}" ]; then
             ext=${{ steps.info.outputs.ext }}
             exts=(${ext//,/ })
@@ -661,6 +667,7 @@ jobs:
           fi
 
           # 编译
+          echo "==============================编译=============================="
           # sed -i "s|#!/usr/bin/env bash|#!/usr/bin/env -S bash -x|g" ./build-loader.sh
           sudo ${bArgs} BRP_USER_CFG=user_config.json ./build-loader.sh '${{ steps.info.outputs.platform }}' '${{ steps.info.outputs.version }}'
 

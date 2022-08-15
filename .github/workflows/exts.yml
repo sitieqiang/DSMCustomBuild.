@@ -43,6 +43,8 @@ jobs:
                     work = 'rp-ext'
                     jext = 'rpext-index.json'
                     exts = {}
+
+                    urlhost = 'https://raw.githubusercontent.com/pocopico/rp-ext/master/'
                     files = os.listdir(os.path.join(root, work))
                     print(files)
                     files.sort()
@@ -56,10 +58,13 @@ jobs:
                                     data = json.load(f)
                                     keys = data["releases"].keys()
                                     for key in keys:
+                                        suffix = ''
+                                        if not os.path.exists(os.path.join(root, work, data["releases"][key].replace(urlhost, ''))):
+                                            suffix = '*'
                                         if key in exts.keys():
-                                            exts[key].append(file)
+                                            exts[key].append(file + suffix)
                                         else:
-                                            exts[key] = [ file ]
+                                            exts[key] = [ file + suffix ]
 
                     if len(exts) > 0:
                         print(json.dumps(exts, indent=4))
