@@ -50,7 +50,7 @@
       var platforms = {};   //支持的机型列表
       var versions = {};    //支持的系统列表
       var releases = {};
-
+      var extbase = "";
       function initPlatforms(list)
       {
         list = list.sort();
@@ -129,7 +129,6 @@
                 }
               }
               $("#inputs").prepend(html);
-              createExtBtn();
               createOtherRule();
             } else {
               console.log(yaml);
@@ -180,6 +179,8 @@
           $.each(options, function(i, p) {
               $('#version').append($('<option></option>').val(p).html(p));
           });
+          $('#version').on('change', changeversion);
+          changeversion();
       }
       function processext(ext) {
         var obj = $("#ext_btn_" + ext.replace(/\./g, "·"));
@@ -204,10 +205,14 @@
         $("#ext").val(exts.join(","));
       }
       function createExtBtn() {
+        platform = $('#platform').val().replace('DS', 'ds').replace('+', 'p');
+        version = $('#version').val().split('-').at(-1);
+        var exts = [];
         httpGetAsync(
-          "https://cdn.jsdelivr.net/gh/pocopico/rp-ext/exts",
+          "https://cdn.jsdelivr.net/gh/wjz304/Redpill_CustomBuild/exts.json",
           function (result) {
-            var exts = result.trim().split("\n");
+            result = JSON.parse(result);
+            exts = result[platform + "_" + version];
             var html = "";
             let idx = 1;
             for (var i in exts) {
@@ -221,12 +226,15 @@
               html += "</button>&nbsp;";
               if (idx++ % 15 == 0) html += "<br />";
             }
-            $($("#ext").parent().parent()).append(html);
             $("#ext").prop("readonly", true);
+            if (extbase == "") extbase = $($("#ext").parent().parent())[0].innerHTML;
+            if (extbase != "") $($("#ext").parent().parent())[0].innerHTML = extbase + html;
           }
         );
       }
-
+      function changeversion(){
+        createExtBtn();
+      }
       function createInput(title, name, desc, opts, dft, req) {
         var html = '<div class="form-group mt-1 mb-2 ';
         if (req) html += "required";
