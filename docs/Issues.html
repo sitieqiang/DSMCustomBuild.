@@ -44,7 +44,7 @@
       }
     </style>
     <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/gh/wjz304/Redpill_CustomBuild/docs/dist/yaml.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/wjz304/Redpill_CustomBuild@main/docs/dist/yaml.js"></script>
 
     <script type="application/javascript">
       var platforms = {};   //支持的机型列表
@@ -80,7 +80,7 @@
 
       window.onload = function () {
         httpGetAsync(
-          "https://cdn.jsdelivr.net/gh/wjz304/Redpill_CustomBuild/.github/workflows/custom.yml",
+          "https://cdn.jsdelivr.net/gh/wjz304/Redpill_CustomBuild@main/.github/workflows/custom.yml",
           function (result) {
             yaml = YAML.parse(result);
             if (yaml.hasOwnProperty("on")) {
@@ -140,7 +140,7 @@
       {
         //这里是支持的机型和系统版本的对应关系
         httpGetAsync(
-          'https://cdn.jsdelivr.net/gh/pocopico/rp-ext/redpill/rpext-index.json',
+          'https://cdn.jsdelivr.net/gh/pocopico/rp-ext@main/redpill/rpext-index.json',
           function(result) {
             result = JSON.parse(result);
             if(result.hasOwnProperty('releases')) {
@@ -209,7 +209,7 @@
         version = $('#version').val().split('-').at(-1);
         var exts = [];
         httpGetAsync(
-          "https://cdn.jsdelivr.net/gh/wjz304/Redpill_CustomBuild/exts.json",
+          "https://cdn.jsdelivr.net/gh/wjz304/Redpill_CustomBuild@main/exts.json",
           function (result) {
             result = JSON.parse(result);
             exts = result[platform + "_" + version];
@@ -578,7 +578,7 @@
       <!-- <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script> -->
       <script>
         httpGetAsync(
-          "https://cdn.jsdelivr.net/gh/wjz304/Redpill_CustomBuild/tips.md",
+          "https://cdn.jsdelivr.net/gh/wjz304/Redpill_CustomBuild@main/tips.md",
           function (result) {
             // var html = marked.parse(result).replace('<pre>', "<pre>\n");
             // 引入的文件就是一段md格式的代码，这里就直接解析一下算了
