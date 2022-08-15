@@ -44,7 +44,9 @@ jobs:
                     jext = 'rpext-index.json'
                     exts = {}
                     files = os.listdir(os.path.join(root, work))
-
+                    print(files)
+                    files.sort()
+                    print(files)
                     for file in files:
                         if file.startswith('.') or file.startswith('redpill'):
                             continue
