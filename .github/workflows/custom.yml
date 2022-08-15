@@ -232,8 +232,6 @@ jobs:
                 exp = 'pocopico'
                 jun = '0'
 
-                errinfo = ''
-
                 if '${{ github.event_name }}' == 'issues':
                     if '${{ env.issuetitle }}'.lower().startswith('custom'):
                         issues = 'true'
@@ -271,7 +269,6 @@ jobs:
                     ext = '${{ inputs.ext }}'.strip()
                     exp = '${{ inputs.exp }}'.strip()
                     jun = '${{ inputs.jun }}'.strip()
-
 
                 if not platform in ['DS3615xs', 'DS3617xs', 'DS918+', 'DS920+', 'DS3622xs+']:
                     iscustom = 'false'
