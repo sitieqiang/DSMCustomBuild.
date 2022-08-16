@@ -592,6 +592,41 @@ jobs:
             pwd
           }
 
+          function setsynoarch() {
+            case $1 in
+            DS3615xs)
+                synoarch=bromolow
+                ;;
+            DS3617xs)
+                synoarch=broadwell
+                ;;
+            DS916+)
+                synoarch=braswell
+                ;;
+            DS918+)
+                synoarch=apollolake
+                ;;
+            DS920+)
+                synoarch=geminilake
+                ;;
+            DS3622xs+)
+                synoarch=broadwellnk
+                ;;
+            DS1621+)
+                synoarch=v1000
+                ;;
+            FS6400)
+                synoarch=purley
+                ;;
+            DVA3219)
+                synoarch=denverton
+                ;;
+            DVA3221)
+                synoarch=denverton
+                ;;
+            esac
+          }
+
           sudo apt update
           sudo apt upgrade -y
           sudo apt install curl bspatch jq git -y
@@ -613,17 +648,19 @@ jobs:
           cp user_config.json redpill-load/user_config.json
 
           cd redpill-load
-
-          synoplatform=$(echo ${{ steps.info.outputs.platform }} | sed 's/DS/ds/g; s/+/p/g')       # DS3622xs+ => ds3622xsp
-          synoversion=$(echo ${{ steps.info.outputs.version }} | awk -F - '{print $2}')            # 7.0.1-42218 => 42218
+          platform=${{ steps.info.outputs.platform }}
+          version=${{ steps.info.outputs.version }}
+          synoplatform=$(echo ${platform} | sed 's/DS/ds/g; s/+/p/g')       # DS3622xs+ => ds3622xsp
+          synoversion=$(echo ${version} | awk -F - '{print $2}')            # 7.0.1-42218 => 42218
+          setsynoarch ${platform}
 
           # 7.1 解密PAT
           echo "===========================7.1 解密PAT=========================="
-          if [[ "${{ steps.info.outputs.version }}" > "7.0.1-42218" ]]; then 
+          if [[ "${version}" > "7.0.1-42218" ]]; then 
             newpat=${synoplatform}_${synoversion}.pat
-            exdsmpat ${{ steps.info.outputs.platform }} ${synoversion} ${newpat}
+            exdsmpat ${platform} ${synoversion} ${newpat}
             ls -al ./cache
-            configfile=./config/${{ steps.info.outputs.platform }}/${{ steps.info.outputs.version }}/config.json
+            configfile=./config/${platform}/${version}/config.json
             jq -r .os.sha256 ${configfile}
             sed -i "s/$(jq -r .os.sha256 ${configfile})/$(sha256sum ./cache/${newpat} | awk '{print $1}')/g" ${configfile}
             jq -r .os.sha256 ${configfile}
@@ -631,10 +668,14 @@ jobs:
 
           # 添加必备驱动
           echo "===========================添加必备驱动=========================="
-          #./ext-manager.sh add https://raw.githubusercontent.com/${repo}/redpill-load/${branch}/redpill-boot-wait/rpext-index.json
-          ./ext-manager.sh add https://raw.githubusercontent.com/${repo}/redpill-load/${branch}/redpill-acpid/rpext-index.json
-          ./ext-manager.sh add https://raw.githubusercontent.com/${repo}/redpill-load/${branch}/redpill-misc/rpext-index.json
-          ./ext-manager.sh add https://raw.githubusercontent.com/${repo}/redpill-load/${branch}/redpill-virtio/rpext-index.json
+          # #./ext-manager.sh add https://raw.githubusercontent.com/${repo}/redpill-load/${branch}/redpill-boot-wait/rpext-index.json
+          # ./ext-manager.sh add https://raw.githubusercontent.com/${repo}/redpill-load/${branch}/redpill-acpid/rpext-index.json
+          # ./ext-manager.sh add https://raw.githubusercontent.com/${repo}/redpill-load/${branch}/redpill-misc/rpext-index.json
+          # ./ext-manager.sh add https://raw.githubusercontent.com/${repo}/redpill-load/${branch}/redpill-virtio/rpext-index.json
+          ./ext-manager.sh add https://raw.githubusercontent.com/pocopico/redpill-load/develop/redpill-boot-wait/rpext-index.json
+          ./ext-manager.sh add https://raw.githubusercontent.com/pocopico/redpill-load/develop/redpill-acpid/rpext-index.json
+          ./ext-manager.sh add https://raw.githubusercontent.com/pocopico/redpill-load/develop/redpill-misc/rpext-index.json
+          ./ext-manager.sh add https://raw.githubusercontent.com/pocopico/redpill-load/develop/redpill-virtio/rpext-index.json
 
           # redpill.ko 方式一 
           echo "=======================Download redpill.ko======================"
@@ -643,22 +684,22 @@ jobs:
           [ "$(echo $redpilltgz | awk '{print $NF}')" != "$redpilltgz" ] && redpilltgz=$(echo $redpilltgz | awk '{print $1}')
           wget ${redpilltgz}
           tar zxvf $(echo ${redpilltgz} | awk -F / '{print $NF}') -C ./ 
-          mv ./redpill.ko ./ext/rp-lkm/redpill-linux-v$(modinfo redpill.ko | grep vermagic | awk '{print $2}').ko
+          mv ./redpill.ko ./ext/rp-lkm/redpill-linux-v$(modinfo --field=vermagic redpill.ko | awk '{print $1}').ko
 
           # # redpill.ko 方式二 
           # echo "========================Build redpill.ko========================"
-          # git clone -b develop --depth=1 https://github.com/jumkey/redpill-lkm.git
-          # # download syno toolkit
-          # curl --location "https://global.download.synology.com/download/ToolChain/toolkit/7.0/broadwellnk/ds.broadwellnk-7.0.dev.txz" --output ds.broadwellnk-7.0.dev.txz
-          # mkdir broadwellnk && tar -C./broadwellnk/ -xf ds.broadwellnk-7.0.dev.txz usr/local/x86_64-pc-linux-gnu/x86_64-pc-linux-gnu/sys-root/usr/lib/modules/DSM-7.0/build
-          # # build redpill-lkm
+          # toolkittxz=ds.${synoarch}-${version::3}.dev.txz
+          # toolkitdir=usr/local/x86_64-pc-linux-gnu/x86_64-pc-linux-gnu/sys-root/usr/lib/modules/DSM-${version::3}/build
+          # curl --location "https://global.download.synology.com/download/ToolChain/toolkit/${version::3}/${synoarch}/${toolkittxz}" --output ${toolkittxz}
+          # mkdir ${synoarch} && tar -C./${synoarch}/ -xf ${toolkittxz} ${toolkitdir}
+          # git clone -b master --depth=1 https://github.com/${repo}/redpill-lkm.git
           # cd redpill-lkm
-          # sed -i 's/   -std=gnu89/   -std=gnu89 -fno-pie/' ../broadwellnk/usr/local/x86_64-pc-linux-gnu/x86_64-pc-linux-gnu/sys-root/usr/lib/modules/DSM-7.0/build/Makefile
-          # make LINUX_SRC=../broadwellnk/usr/local/x86_64-pc-linux-gnu/x86_64-pc-linux-gnu/sys-root/usr/lib/modules/DSM-7.0/build dev-v7
-          # read -a KVERS <<< "$(sudo modinfo --field=vermagic redpill.ko)" && cp -fv redpill.ko ../redpill-load/ext/rp-lkm/redpill-linux-v${KVERS[0]}.ko || exit 1
+          # # sed -i 's/   -std=gnu89/   -std=gnu89 -fno-pie/' ../${synoarch}/${toolkitdir}/Makefile
+          # make LINUX_SRC=../${synoarch}/${toolkitdir} dev-v${version::1}
+          # cp -fv ./redpill.ko ../ext/rp-lkm/redpill-linux-v$(modinfo --field=vermagic ./redpill.ko | awk '{print $1}').ko
           # cd ..
 
-          if [ ${{ steps.info.outputs.platform }} == 'DS920+' ]; then
+          if [ ${platform} == 'DS920+' ]; then
             echo "===========================DS920+ .dtb=========================="
             ./ext-manager.sh add https://raw.githubusercontent.com/pocopico/rp-ext/master/redpill-dtb-static/rpext-index.json
             ./ext-manager.sh _update_platform_exts ${synoplatform}_${synoversion} redpill-dtb-static
@@ -693,7 +734,7 @@ jobs:
           # 编译
           echo "==============================编译=============================="
           # sed -i "s|#!/usr/bin/env bash|#!/usr/bin/env -S bash -x|g" ./build-loader.sh
-          sudo ${bArgs} BRP_USER_CFG=user_config.json ./build-loader.sh '${{ steps.info.outputs.platform }}' '${{ steps.info.outputs.version }}'
+          sudo ${bArgs} BRP_USER_CFG=user_config.json ./build-loader.sh "${platform}" "${version}"
 
           ls -al ./custom/extensions
 
