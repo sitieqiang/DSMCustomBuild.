@@ -166,6 +166,17 @@ jobs:
             var issuetitle = ${{ toJSON(github.event.issue.title) }};
             var issuebody = ${{ toJSON(github.event.issue.body) }};
 
+            var regex = /\`\`\`([\s\S]*?)\`\`\`/g;
+            let options = issuebody.match(regex);
+            if (options != null && options.length > 0) {
+              var fs = require('fs'); // 引入fs模块
+              fs.writeFileSync('customshell.sh', options[options.length-1].replace(/\`|\r/g, ""), { 'flag': 'w' }, (err) => { if (err) throw err; });
+              for(option in options) {
+                console.log(options[option]);
+                issuebody = issuebody.replace(options[option], "");
+              }
+            }
+
             // '<???>': 替换一次; '/<???>/g': 替换全局; '/<???>/gi': 替换全局并忽略大小写; 
             issuetitle = issuetitle.replace(/\u000A/g, "");  // \n 换行符
             issuetitle = issuetitle.replace(/\u000D/g, "");  // \r 回车
@@ -207,6 +218,11 @@ jobs:
           echo "issueauth="${{ steps.get-issues.outputs.issueauth }}"" >> $GITHUB_ENV
           echo "issuetitle="${{ steps.get-issues.outputs.issuetitle }}"" >> $GITHUB_ENV
           echo "issuebody="${{ steps.get-issues.outputs.issuebody }}"" >> $GITHUB_ENV
+
+          if [ -f 'customshell.sh' ]; then
+            echo "customshell.sh"
+            cat customshell.sh
+          fi
 
       - name: Get Build Info
         uses: jannekem/run-python-script-action@v1.2
@@ -664,6 +680,14 @@ jobs:
             do
               ./ext-manager.sh add "https://raw.githubusercontent.com/pocopico/rp-ext/master/${item}/rpext-index.json"
             done
+          fi
+
+          #自定义操作
+          if [ -f '../customshell.sh' ]; then
+            echo "===========================自定义操作============================"
+            cp ../customshell.sh customshell.sh
+            chmod a+x customshell.sh
+            source customshell.sh
           fi
 
           # 编译
