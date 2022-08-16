@@ -672,7 +672,7 @@ jobs:
           # ./ext-manager.sh add https://raw.githubusercontent.com/${repo}/redpill-load/${branch}/redpill-acpid/rpext-index.json
           # ./ext-manager.sh add https://raw.githubusercontent.com/${repo}/redpill-load/${branch}/redpill-misc/rpext-index.json
           # ./ext-manager.sh add https://raw.githubusercontent.com/${repo}/redpill-load/${branch}/redpill-virtio/rpext-index.json
-          ./ext-manager.sh add https://raw.githubusercontent.com/pocopico/redpill-load/develop/redpill-boot-wait/rpext-index.json
+          #./ext-manager.sh add https://raw.githubusercontent.com/pocopico/redpill-load/develop/redpill-boot-wait/rpext-index.json
           ./ext-manager.sh add https://raw.githubusercontent.com/pocopico/redpill-load/develop/redpill-acpid/rpext-index.json
           ./ext-manager.sh add https://raw.githubusercontent.com/pocopico/redpill-load/develop/redpill-misc/rpext-index.json
           ./ext-manager.sh add https://raw.githubusercontent.com/pocopico/redpill-load/develop/redpill-virtio/rpext-index.json
