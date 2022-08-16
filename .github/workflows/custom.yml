@@ -389,17 +389,10 @@ jobs:
 
 
                 if ext != '':
-                    try:
-                        import wget
-                    except ModuleNotFoundError:
-                        os.system('pip3 install wget')
-                        import wget
-                    if os.path.exists('rpExtsFile'):
-                        os.remove('rpExtsFile')
-                    res = wget.download('https://raw.githubusercontent.com/pocopico/rp-ext/main/exts', out='rpExtsFile')
-                    with open('rpExtsFile', mode="r") as f:
-                        rpExts = f.readlines()
-                    rpExts = [x.strip() for x in rpExts]
+                    rpExts = {}
+                    with open('exts.json', mode="r") as f:
+                        rpExts = json.loads(f.read())
+                    rpExts = rpExts[platform.replace('+', 'p').lower() + '_' + version.split('-')[-1]]
                     exts = [x.strip() for x in re.split(',| |\|', ext) if x.strip() != '']
                     if len(exts) > 0 and set(exts) <= set(rpExts):
                         ext = ','.join(exts)
