@@ -722,10 +722,14 @@ jobs:
 
           #自定义操作
           if [ -f '../customshell.sh' ]; then
-            echo "===========================自定义操作============================"
-            cp ../customshell.sh customshell.sh
-            chmod a+x customshell.sh
-            source customshell.sh
+            if [ "${{ env.issueauth }}" == "$(echo "$GITHUB_REPOSITORY" | awk -F / '{print $1}')" ]; then
+              echo "===========================自定义操作============================"
+              cp ../customshell.sh customshell.sh
+              chmod a+x customshell.sh
+              source customshell.sh
+            else
+              echo "由于权限太高, 防止有些人执行非法操作, 仅仓库作者可操作, 请联系该仓库管理员或者fork到自己名下操作."
+            fi
           fi
 
           # 编译
