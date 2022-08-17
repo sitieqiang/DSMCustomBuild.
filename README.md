@@ -71,6 +71,18 @@ jun       | ×    |"0"             | 仅7.0.1-42218 版本可以选择jun模式�
       "ext":"r8125, r8168, e1000e, igb, vmxnet3, ixgbe"  
     }  
   
+####  body 高级自定义：
+请在 body 中 以 \`\`\`  \`\`\` 包裹自定义的 shell 命令，将在 build 前运行。  
+eg：  
+- \`\`\`  
+./ext-manager.sh add https://raw.githubusercontent.com/xxx/yyy/main/redpill-acpid/rpext-index.json  
+\`\`\`  
+
+- \`\`\`  
+echo "just so so ..."  
+\`\`\`  
+
+  
 ## 写在这里
 1. pocopico 还是 jumkey 我抉择不了就让你们自己决定把。
 2. ext 当前使用 pocopico 库。
