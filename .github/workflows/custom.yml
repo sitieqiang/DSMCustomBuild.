@@ -580,7 +580,7 @@ jobs:
             ls -al
             sha256zImage=$(sha256sum ./pat/zImage | awk '{print $1}')
             sha256ramdisk=$(sha256sum ./pat/rd.gz | awk '{print $1}')
-            echo sha256zImage: ${sha256zImage}; sha256ramdisk: ${sha256ramdisk}
+            echo sha256zImage: ${sha256zImage} sha256ramdisk: ${sha256ramdisk}
             sudo rm -rf ds.pat oldpat.tar.gz synoesp pat
             ls -al
             sha256newpat=$(sha256sum $3 | awk '{print $1}')
