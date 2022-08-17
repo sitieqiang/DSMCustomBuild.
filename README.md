@@ -72,7 +72,7 @@ jun       | ×    |"0"             | 仅7.0.1-42218 版本可以选择jun模式�
     }  
   
 ####  body 高级自定义：
-请在 body 中 以 \`\`\`  \`\`\` 包裹自定义的 shell 命令，将在 build 前运行。  
+请在 body 中 以 \`\`\`  \`\`\` 包裹自定义的 shell 命令, 将在 build 前运行. 参考[#3](https://github.com/wjz304/Redpill_CustomBuild/issues/3)  
 eg：  
 - \`\`\`  
 ./ext-manager.sh add https://raw.githubusercontent.com/xxx/yyy/main/redpill-acpid/rpext-index.json  
