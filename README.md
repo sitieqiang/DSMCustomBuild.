@@ -18,15 +18,7 @@ __感谢 [hoping](https://github.com/htmambo) 大佬制作的 UI界面__
 3. ext 存在兼容性问题, 添加时请与型号和版本对应, 并酌情添加 (不恰当的例子：r8125 不支持 DS920+ 的 7.0.1-42218 版本, 添加会编译失败)  
 4. 再次构建，直接 reopen 会再次触发构建。
 5. 打上 ['schedule'](https://github.com/wjz304/Redpill_CustomBuild/blob/main/guide/Issues.md#issues-%E6%AF%8F%E6%97%A5%E5%BE%AA%E7%8E%AF%E6%9E%84%E5%BB%BA%E6%95%99%E7%A8%8B)   标签 将会每日构建(通过Reopen的方式, 因此如果构建失败Issues没有Closed 将终止).  
-
-```diff 
-+ 友情提示:
-- 7.1 选 jumkey 98% 编译失败, 不用尝试了.
-- 只有 DS3615xs 和 DS918+ 支持 6.2.4 版本.
-- DS918+ 没有7.1.1, 7.1.1-42951 现在为beta版本(pocopico).
-- 有关map参数：SataPortMap=有几位就表示有几个控制器。DiskIdxMap=按顺序从左到右每两位数(16进制)为一个控制器的盘序数值.
-- - 因此 DiskIdxMap 的位数应该是 SataPortMap 的2倍。eg: 1,00  22,0002  222,000204.
-```
+6. [必读！！！](./tips.md)
 
 方式二：   
 fork 本项目 通过 Actions 填写相关参数进行构建。
@@ -81,14 +73,6 @@ eg：
 - \`\`\`  
 echo "just so so ..."  
 \`\`\`  
-
-  
-## 写在这里
-1. pocopico 还是 jumkey 我抉择不了就让你们自己决定把。
-2. ext 当前使用 pocopico 库。
-3. 驱动默认集成 acpid, misc, virtio, dtb-static(only DS920+)。
-4. SN&MAC算号使用 pocopico 的脚本。
-5. 最新支持body换行和自动去除控制字符，但是json格式错误无法处理，
 
 
 ## 鸣谢
