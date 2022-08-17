@@ -578,9 +578,13 @@ jobs:
             sudo LD_LIBRARY_PATH=synoesp/extract synoesp/extract/syno_extract_system_patch ds.pat pat || echo "extract latest pat"
             tar -czvf $3 -C ./pat/ . --warning=no-file-changed
             ls -al
+            sha256zImage=$(sha256sum ./pat/zImage | awk '{print $1}')
+            sha256ramdisk=$(sha256sum ./pat/rd.gz | awk '{print $1}')
+            echo sha256zImage: ${sha256zImage}; sha256ramdisk: ${sha256ramdisk}
             sudo rm -rf ds.pat oldpat.tar.gz synoesp pat
             ls -al
-            sha256sum $3
+            sha256newpat=$(sha256sum $3 | awk '{print $1}')
+            echo sha256newpat: ${sha256newpat}
             cd ..
             pwd
           }
