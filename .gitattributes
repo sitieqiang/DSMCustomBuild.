@@ -1,1 +1,2 @@
+*.md linguist-language=yml
 *.yml linguist-language=yml
