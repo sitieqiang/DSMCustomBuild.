@@ -1,1 +1,4 @@
-
+*.md linguist-language=markdown
+*.yml linguist-language=yaml
+*.html linguist-language=html
+*.json linguist-language=json
