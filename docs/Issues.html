@@ -97,7 +97,7 @@
         xmlHttpReq.open("GET", theUrl, true); // true for asynchronous
         xmlHttpReq.send(null);
       }
-
+      var dev = getUrlParam("dev");
       window.onload = function () {
         httpGetAsync(
           "https://cdn.jsdelivr.net/gh/wjz304/Redpill_CustomBuild@main/.github/workflows/custom.yml",
@@ -160,7 +160,7 @@
       {
         //这里是支持的机型和系统版本的对应关系
         var extsurl = "https://cdn.jsdelivr.net/gh/pocopico/rp-ext@main/redpill/rpext-index.json";
-        if (dev ==  "1") extsurl = "https://cdn.jsdelivr.net/gh/wjz304/rp-ext@main/redpill/rpext-index.json"
+        if (dev ==  "1") extsurl = "https://cdn.jsdelivr.net/gh/wjz304/rp-ext@main/redpill/rpext-index.json";
         httpGetAsync(
           extsurl,
           function(result) {
@@ -231,7 +231,7 @@
         version = $('#version').val().split('-').at(-1);
         var exts = [];
         var extsurl = "https://cdn.jsdelivr.net/gh/wjz304/Redpill_CustomBuild@main/exts.json";
-        if (dev ==  "1") extsurl = "https://cdn.jsdelivr.net/gh/wjz304/Redpill_CustomBuild@main/exts_dev.json"
+        if (dev ==  "1") extsurl = "https://cdn.jsdelivr.net/gh/wjz304/Redpill_CustomBuild@main/exts_dev.json";
 
         httpGetAsync(
           extsurl,
