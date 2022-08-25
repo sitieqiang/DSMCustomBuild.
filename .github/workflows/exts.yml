@@ -26,11 +26,12 @@ jobs:
           git config --global user.name "github-actions[bot]"
           sudo timedatectl set-timezone "Asia/Shanghai"
 
-      - name: Checkout rp-ext
+      - name: Checkout pocopico rp-ext
         run: |
+          sudo rm -rf rp-ext
           git clone https://github.com/pocopico/rp-ext rp-ext
 
-      - name: Get exts
+      - name: Get pocopico exts
         uses: jannekem/run-python-script-action@v1.2
         with:
           script: |
@@ -44,7 +45,8 @@ jobs:
                     jext = 'rpext-index.json'
                     exts = {}
 
-                    urlhost = 'https://raw.githubusercontent.com/pocopico/rp-ext/master/'
+                    urlhost1 = 'https://raw.githubusercontent.com/pocopico/rp-ext/master/'
+                    urlhost2 = 'https://github.com/pocopico/rp-ext/raw/main/'
                     files = os.listdir(os.path.join(root, work))
                     print(files)
                     files.sort()
@@ -59,7 +61,7 @@ jobs:
                                     keys = data["releases"].keys()
                                     for key in keys:
                                         suffix = ''
-                                        if not os.path.exists(os.path.join(root, work, data["releases"][key].replace(urlhost, ''))):
+                                        if not os.path.exists(os.path.join(root, work, data["releases"][key].replace(urlhost1, '').replace(urlhost2, ''))):
                                             suffix = '*'
                                         if key in exts.keys():
                                             exts[key].append(file + suffix)
@@ -70,21 +72,73 @@ jobs:
                         print(json.dumps(exts, indent=4))
                         with open(os.path.join(root, 'exts.json'), 'w', encoding='utf-8') as f:
                             f.write(json.dumps(exts, indent=4))
+                except Exception as err:
+                    print(err)
+
+      - name: Checkout wjz304 rp-ext
+        run: |
+          sudo rm -rf rp-ext
+          git clone https://github.com/wjz304/rp-ext rp-ext
+
+      - name: Get wjz304 exts
+        uses: jannekem/run-python-script-action@v1.2
+        with:
+          script: |
+            import os, json
+
+            if __name__ == '__main__':
+
+                try:
+                    root = '' # os.path.dirname(os.path.abspath(__file__))
+                    work = 'rp-ext'
+                    jext = 'rpext-index.json'
+                    exts = {}
+
+                    urlhost1 = 'https://raw.githubusercontent.com/wjz304/rp-ext/master/'
+                    files = os.listdir(os.path.join(root, work))
+                    print(files)
+                    files.sort()
+                    print(files)
+                    for file in files:
+                        if file.startswith('.') or file.startswith('redpill'):
+                            continue
+                        if os.path.isdir(os.path.join(root, work, file)):
+                            if os.path.exists(os.path.join(root, work, file, jext)):
+                                with open(os.path.join(root, work, file, jext), 'r') as f:
+                                    data = json.load(f)
+                                    keys = data["releases"].keys()
+                                    for key in keys:
+                                        suffix = ''
+                                        if not os.path.exists(os.path.join(root, work, data["releases"][key].replace(urlhost1, ''))):
+                                            suffix = '*'
+                                        if key in exts.keys():
+                                            exts[key].append(file + suffix)
+                                        else:
+                                            exts[key] = [ file + suffix ]
+                    if len(exts) > 0:
+                        print(json.dumps(exts, indent=4))
+                        with open(os.path.join(root, 'exts_dev.json'), 'w', encoding='utf-8') as f:
+                            f.write(json.dumps(exts, indent=4))
 
                 except Exception as err:
                     print(err)
 
-      - name: Check for changes
+      - name: Check and Push
         run: |
-          if [ -n "$(git status -s | grep exts.json)" ];then
-            echo "ischanges=true" >> $GITHUB_ENV
-          else
-            echo "ischanges=false" >> $GITHUB_ENV
+          ischanges=false
+
+          if [ -n "$(git status -s | grep exts.json)" ]; then
+            ischanges=true
+            git add exts.json
           fi
 
-      - name: Commit and Push
-        if: env.ischanges == 'true'
-        run: |
-          git add exts.json
-          git commit -m "update $(date +%Y-%m-%d" "%H:%M:%S)"
-          git push -f
+          if [ -n "$(git status -s | grep exts_dev.json)" ]; then
+            ischanges=true
+            git add exts_dev.json
+          fi
+
+          if [ ${ischanges} == 'true' ]; then
+            git status -s
+            git commit -m "update $(date +%Y-%m-%d" "%H:%M:%S)"
+            git push -f
+          fi

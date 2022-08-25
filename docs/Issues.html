@@ -51,6 +51,26 @@
       var versions = {};    //支持的系统列表
       var releases = {};
       var extbase = "";
+
+      function getUrlParam(paraName) {
+        var url = document.location.toString();
+        var arrObj = url.split("?");
+        if (arrObj.length > 1) {
+            var arrPara = arrObj[1].split("&");
+            var arr;
+            for (var i = 0; i < arrPara.length; i++) {
+                arr = arrPara[i].split("=");
+                if (arr != null && arr[0] == paraName) {
+                    return arr[1];
+                }
+            }
+            return "";
+        }
+        else {
+            return "";
+        }
+      }
+
       function initPlatforms(list)
       {
         list = list.sort();
@@ -139,8 +159,10 @@
       function createOtherRule()
       {
         //这里是支持的机型和系统版本的对应关系
+        var extsurl = "https://cdn.jsdelivr.net/gh/pocopico/rp-ext@main/redpill/rpext-index.json";
+        if (dev ==  "1") extsurl = "https://cdn.jsdelivr.net/gh/wjz304/rp-ext@main/redpill/rpext-index.json"
         httpGetAsync(
-          'https://cdn.jsdelivr.net/gh/pocopico/rp-ext@main/redpill/rpext-index.json',
+          extsurl,
           function(result) {
             result = JSON.parse(result);
             if(result.hasOwnProperty('releases')) {
@@ -208,8 +230,11 @@
         platform = $('#platform').val().replace('DS', 'ds').replace('+', 'p');
         version = $('#version').val().split('-').at(-1);
         var exts = [];
+        var extsurl = "https://cdn.jsdelivr.net/gh/wjz304/Redpill_CustomBuild@main/exts.json";
+        if (dev ==  "1") extsurl = "https://cdn.jsdelivr.net/gh/wjz304/Redpill_CustomBuild@main/exts_dev.json"
+
         httpGetAsync(
-          "https://cdn.jsdelivr.net/gh/wjz304/Redpill_CustomBuild@main/exts.json",
+          extsurl,
           function (result) {
             result = JSON.parse(result);
             exts = result[platform + "_" + version];
@@ -312,6 +337,7 @@
         if (formData.get("inputs[ext]")) body["ext"] = formData.get("inputs[ext]");
         if (formData.get("inputs[exp]")) body["exp"] = formData.get("inputs[exp]");
         if (formData.get("inputs[jun]")) body["jun"] = formData.get("inputs[jun]");
+        if (dev ==  "1") body["dev"]  = "1";
         title = "Custom " + formData.get("inputs[title]");
         var data =
           "title=" +

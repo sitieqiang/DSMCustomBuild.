@@ -236,6 +236,7 @@ jobs:
                 issues = 'false'
                 iscustom = 'true'
                 errinfo = ''
+                dev = '0'
 
                 platform = 'DS3622xs+'
                 version = '7.1.0-42661'
@@ -269,6 +270,7 @@ jobs:
                                 if 'ext' in body: ext = body['ext'].strip()
                                 if 'exp' in body: exp = body['exp'].strip()
                                 if 'jun' in body: jun = body['jun'].strip()
+                                if 'dev' in body: dev = body['dev'].strip()
                         except Exception as err:
                             iscustom = 'false'
                             errinfo = 'body error, {}.'.format(err)
@@ -285,6 +287,7 @@ jobs:
                     ext = '${{ inputs.ext }}'.strip()
                     exp = '${{ inputs.exp }}'.strip()
                     jun = '${{ inputs.jun }}'.strip()
+                    # dev = '${{ inputs.dev }}'.strip()
 
                 if not platform in ['DS3615xs', 'DS3617xs', 'DS918+', 'DS920+', 'DS3622xs+']:
                     iscustom = 'false'
@@ -387,16 +390,23 @@ jobs:
                         iscustom = 'false'
                         errinfo = 'usb parameter error'
 
-
                 if ext != '':
                     rpExts = {}
-                    with open('exts.json', mode="r") as f:
-                        rpExts = json.loads(f.read())
-                    rpExts = rpExts[platform.replace('+', 'p').lower() + '_' + version.split('-')[-1]]
-                    exts = [x.strip() for x in re.split(',| |\|', ext) if x.strip() != '']
-                    if len(exts) > 0 and set(exts) <= set(rpExts):
-                        ext = ','.join(exts)
+                    if dev == '1':
+                        with open('exts_dev.json', mode="r") as f:
+                            rpExts = json.loads(f.read())
                     else:
+                        with open('exts.json', mode="r") as f:
+                            rpExts = json.loads(f.read())
+                    rpExts = rpExts[platform.replace('+', 'p').lower() + '_' + version.split('-')[-1]]
+                    extpocs = [x.strip() for x in re.split(',| |\|', ext) if x.strip() != '' and not x.strip().startswith('http')]
+                    ext3rds = [x.strip() for x in re.split(',| |\|', ext) if x.strip() != '' and x.strip().startswith('http')]
+                    ext = ''
+                    if len(extpocs) > 0 and set(extpocs) <= set(rpExts):
+                        ext = ','.join(extpocs)
+                    if len(ext3rds) > 0:
+                        ext = ','.join(ext3rds)
+                    if ext == '':
                         iscustom = 'false'
                         errinfo = 'ext parameter error'
 
@@ -422,6 +432,7 @@ jobs:
                 set_output('ext', ext)
                 set_output('exp', exp)
                 set_output('jun', jun)
+                set_output('dev', dev)
 
       - name: Echo Build Info
         run: |
@@ -639,6 +650,12 @@ jobs:
               branch=jun
             fi
           fi
+          rpext=https://raw.githubusercontent.com/pocopico/rp-ext/master
+          loadext=https://raw.githubusercontent.com/pocopico/redpill-load/develop
+          if [ ${{ steps.info.outputs.dev }} == '1' ]; then 
+            rpext=https://raw.githubusercontent.com/wjz304/rp-ext/master
+            loadext=https://raw.githubusercontent.com/wjz304/rp-ext/master
+          fi
 
           git clone -b ${branch} https://github.com/${repo}/redpill-load redpill-load
 
@@ -665,18 +682,15 @@ jobs:
 
           # 添加必备驱动
           echo "===========================添加必备驱动=========================="
-          # #./ext-manager.sh add https://raw.githubusercontent.com/${repo}/redpill-load/${branch}/redpill-boot-wait/rpext-index.json
-          # ./ext-manager.sh add https://raw.githubusercontent.com/${repo}/redpill-load/${branch}/redpill-acpid/rpext-index.json
-          # ./ext-manager.sh add https://raw.githubusercontent.com/${repo}/redpill-load/${branch}/redpill-misc/rpext-index.json
-          # ./ext-manager.sh add https://raw.githubusercontent.com/${repo}/redpill-load/${branch}/redpill-virtio/rpext-index.json
-          #./ext-manager.sh add https://raw.githubusercontent.com/pocopico/redpill-load/develop/redpill-boot-wait/rpext-index.json
-          ./ext-manager.sh add https://raw.githubusercontent.com/pocopico/redpill-load/develop/redpill-acpid/rpext-index.json
-          ./ext-manager.sh add https://raw.githubusercontent.com/pocopico/redpill-load/develop/redpill-misc/rpext-index.json
-          ./ext-manager.sh add https://raw.githubusercontent.com/pocopico/redpill-load/develop/redpill-virtio/rpext-index.json
+          echo -e '{\n    "thethorgroup.boot-wait": "https://raw.githubusercontent.com/wjz304/rp-ext/master/redpill-boot-wait/rpext-index.json"\n}' > bundled-exts.json
+          #./ext-manager.sh add ${loadext}/redpill-boot-wait/rpext-index.json
+          ./ext-manager.sh add ${loadext}/redpill-acpid/rpext-index.json
+          ./ext-manager.sh add ${loadext}/redpill-misc/rpext-index.json
+          ./ext-manager.sh add ${loadext}/redpill-virtio/rpext-index.json
 
           # redpill.ko 方式一 
           echo "=======================Download redpill.ko======================"
-          extension=$(curl -s --location "https://raw.githubusercontent.com/pocopico/rp-ext/master/redpill/rpext-index.json")
+          extension=$(curl -s --location "${rpext}/redpill/rpext-index.json")
           redpilltgz=$(curl -s --location "$(echo ${extension} | jq -r .releases.${synoplatform}_${synoversion})" | jq -r '.files[] .url')
           [ "$(echo $redpilltgz | awk '{print $NF}')" != "$redpilltgz" ] && redpilltgz=$(echo $redpilltgz | awk '{print $1}')
           wget ${redpilltgz}
@@ -698,7 +712,7 @@ jobs:
 
           if [ ${platform} == 'DS920+' ]; then
             echo "===========================DS920+ .dtb=========================="
-            ./ext-manager.sh add https://raw.githubusercontent.com/pocopico/rp-ext/master/redpill-dtb-static/rpext-index.json
+            ./ext-manager.sh add ${rpext}/redpill-dtb-static/rpext-index.json
             ./ext-manager.sh _update_platform_exts ${synoplatform}_${synoversion} redpill-dtb-static
 
             if [ -n "${{ steps.info.outputs.dtb }}" ]; then
@@ -716,7 +730,11 @@ jobs:
             exts=(${ext//,/ })
             for item in ${exts[@]}
             do
-              ./ext-manager.sh add "https://raw.githubusercontent.com/pocopico/rp-ext/master/${item}/rpext-index.json"
+              if [[ ${item} = http* ]]; then
+                ./ext-manager.sh add "${item}"
+              else
+                ./ext-manager.sh add "${rpext}/${item}/rpext-index.json"
+              fi
             done
           fi
 

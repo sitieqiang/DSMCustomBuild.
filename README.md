@@ -9,7 +9,7 @@
 ## 说明  
 方式一：  
 在本项目 Issues 中创建问题，按需填写即可发起定制构建。  
-【👉[快速创建](https://wjz304.github.io/Redpill_CustomBuild/Issues.html)】 【👉[图文说明](https://github.com/wjz304/Redpill_CustomBuild/blob/main/guide/Issues.md)】 【👉[参考示例issue#1](https://github.com/wjz304/Redpill_CustomBuild/issues/1)】  【👉[驱动支持表](https://xpenology.com/forum/topic/4980-gt-hardware-supported-list-for-dsm-52-lt/)】  【👉[json错误检测](https://json-online.com/check/)】  
+【👉[快速创建](https://wjz304.github.io/Redpill_CustomBuild/Issues.html)】 【👉[快速创建(dev)](https://wjz304.github.io/Redpill_CustomBuild/Issues.html?dev=1)】 【👉[图文说明](https://github.com/wjz304/Redpill_CustomBuild/blob/main/guide/Issues.md)】 【👉[参考示例issue#1](https://github.com/wjz304/Redpill_CustomBuild/issues/1)】  【👉[驱动支持表](https://xpenology.com/forum/topic/4980-gt-hardware-supported-list-for-dsm-52-lt/)】  【👉[json错误检测](https://json-online.com/check/)】  
 
 __感谢 [hoping](https://github.com/htmambo) 大佬制作的 UI界面__  
 
