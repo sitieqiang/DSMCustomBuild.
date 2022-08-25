@@ -49,7 +49,7 @@ dtb       | ×    |-               | dtb文件下载URL(support ext: .dts,.dtb,.
 sn        | ×    |-               | 序列号. 默认根据型号随机生成. eg: "1980PDN002189" 
 mac       | ×    |-               | MAC地址. 多个请以 "," 间隔. 默认根据型号随机生成. eg: "001132888A95, 001132888A96"  
 usb       | ×    |"0x0001, 0x46f4"| 设备识别码（pid）和供应商ID（vid）[格式: pid, vid]. 默认无.  eg: "0xa4a5, 0x0525"  
-ext       | ×    |-               | 多个请以 "," 间隔. 可选项参考: [[rp-ext](./exts.json)]. eg: "r8125, tg3"  
+ext       | ×    |-               | 多个请以 "," 间隔. 可选项参考: [[rp-ext](./exts.json)]. eg: "r8125, tg3", （第三方驱动参考[#753](https://github.com/wjz304/Redpill_CustomBuild/issues/753)）  
 exp       | ×    |"pocopico"      | 编译依赖的基础库. "pocopico", "jumkey" (大佬的抉择，7.1 优先选 pocopico, 7.0-jun 优先选 jumkey)
 jun       | ×    |"0"             | 仅7.0.1-42218 版本可以选择jun模式，jun模式 支持 7.01~7.1u3 的 DSM。
 
@@ -67,7 +67,11 @@ jun       | ×    |"0"             | 仅7.0.1-42218 版本可以选择jun模式�
       "mac":"001132888A95, 001132888A96, 001132888A97",  
       "ext":"r8125, r8168, e1000e, igb, vmxnet3, ixgbe"  
     }  
-  
+  - {  
+      "platform":"DS3622xs+",  
+      "version":"7.1.1-42951",  
+      "ext":"r8125, e1000, e1000e, vmxnet3, https://raw.githubusercontent.com/wjz304/rp-ext/main/rtl8150/rpext-index.json"  
+    }
 ####  body 高级自定义：
 请在 body 中 以 \`\`\`  \`\`\` 包裹自定义的 shell 命令, 将在 build 前运行. 参考[#3](https://github.com/wjz304/Redpill_CustomBuild/issues/3)  
 eg：  
