@@ -51,7 +51,7 @@ mac       | ×    |-               | MAC地址. 多个请以 "," 间隔. 默认�
 usb       | ×    |"0x0001, 0x46f4"| 设备识别码（pid）和供应商ID（vid）[格式: pid, vid]. 默认无.  eg: "0xa4a5, 0x0525"  
 ext       | ×    |-               | 多个请以 "," 间隔. 支持名字（pocopico库）或者链接，名字参考[rp-ext](./exts.json). eg: "r8125, tg3", 链接参考[#753](https://github.com/wjz304/Redpill_CustomBuild/issues/753)  
 exp       | ×    |"pocopico"      | 编译依赖的基础库. "pocopico", "jumkey" (大佬的抉择，7.1 优先选 pocopico, 7.0-jun 优先选 jumkey)
-jun       | ×    |"0"             | 仅7.0.1-42218 版本可以选择jun模式，jun模式 支持 7.01~7.1u3 的 DSM。
+jun       | ×    |"0"             | 仅7.0.1-42218 版本可以选择jun模式，jun模式 支持 7.0.1~7.1.1 的 DSM。
 
 
 - eg:
