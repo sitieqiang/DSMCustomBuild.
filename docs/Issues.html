@@ -47,8 +47,8 @@
     <script src="https://cdn.jsdelivr.net/gh/jeremyfa/yaml.js@develop/dist/yaml.min.js"></script>
 
     <script type="application/javascript">
-      var platforms = {};   //支持的机型列表
-      var versions = {};    //支持的系统列表
+      var platforms = {}; //支持的机型列表
+      var versions = {}; //支持的系统列表
       var releases = {};
       var extbase = "";
 
@@ -56,34 +56,31 @@
         var url = document.location.toString();
         var arrObj = url.split("?");
         if (arrObj.length > 1) {
-            var arrPara = arrObj[1].split("&");
-            var arr;
-            for (var i = 0; i < arrPara.length; i++) {
-                arr = arrPara[i].split("=");
-                if (arr != null && arr[0] == paraName) {
-                    return arr[1];
-                }
+          var arrPara = arrObj[1].split("&");
+          var arr;
+          for (var i = 0; i < arrPara.length; i++) {
+            arr = arrPara[i].split("=");
+            if (arr != null && arr[0] == paraName) {
+              return arr[1];
             }
-            return "";
-        }
-        else {
-            return "";
+          }
+          return "";
+        } else {
+          return "";
         }
       }
 
-      function initPlatforms(list)
-      {
+      function initPlatforms(list) {
         list = list.sort();
-        for(var i in list){
-          var key = list[i].replace('DS', 'ds').replace('+', 'p');
+        for (var i in list) {
+          var key = list[i].replace("DS", "ds").replace("+", "p");
           platforms[key] = list[i];
         }
       }
-      function initVersions(list)
-      {
+      function initVersions(list) {
         list = list.sort();
-        for(var i in list) {
-          j = list[i].split('-');
+        for (var i in list) {
+          j = list[i].split("-");
           // tmp.push(j[1]);
           versions[j[1]] = list[i];
         }
@@ -99,6 +96,7 @@
       }
       var dev = getUrlParam("dev");
       window.onload = function () {
+        if (dev == "1") $("#titleLabel").text("Develop");
         httpGetAsync(
           "https://cdn.jsdelivr.net/gh/wjz304/Redpill_CustomBuild@main/.github/workflows/custom.yml",
           function (result) {
@@ -117,9 +115,9 @@
               );
               for (var field in inputs) {
                 var ff = inputs[field];
-                if(field == 'platform') {
+                if (field == "platform") {
                   initPlatforms(ff.options);
-                } else if ( field=='version') {
+                } else if (field == "version") {
                   initVersions(ff.options);
                 }
                 var dft = "";
@@ -156,53 +154,52 @@
           }
         );
       };
-      function createOtherRule()
-      {
+      function createOtherRule() {
         //这里是支持的机型和系统版本的对应关系
-        var extsurl = "https://cdn.jsdelivr.net/gh/pocopico/rp-ext@main/redpill/rpext-index.json";
-        if (dev ==  "1") extsurl = "https://cdn.jsdelivr.net/gh/wjz304/rp-ext@main/redpill/rpext-index.json";
-        httpGetAsync(
-          extsurl,
-          function(result) {
-            result = JSON.parse(result);
-            if(result.hasOwnProperty('releases')) {
-              var xreleases = new Array;
-              var k = 0;
-              for(var i in result.releases){
-                var tmp = i.split('_');
-                if(tmp.length == 2) {
-                  xreleases[k] = i;
-                  k ++;
-                }
+        var extsurl =
+          "https://cdn.jsdelivr.net/gh/pocopico/rp-ext@main/redpill/rpext-index.json";
+        if (dev == "1")
+          extsurl =
+            "https://cdn.jsdelivr.net/gh/wjz304/rp-ext@main/redpill/rpext-index.json";
+        httpGetAsync(extsurl, function (result) {
+          result = JSON.parse(result);
+          if (result.hasOwnProperty("releases")) {
+            var xreleases = new Array();
+            var k = 0;
+            for (var i in result.releases) {
+              var tmp = i.split("_");
+              if (tmp.length == 2) {
+                xreleases[k] = i;
+                k++;
               }
-              xreleases = xreleases.sort();
-              for(var i in xreleases){
-                var tmp = xreleases[i].split('_');
-                if(tmp.length == 2) {
-                  if(versions.hasOwnProperty(tmp[1])) {
-                    if(!releases.hasOwnProperty(tmp[0])) {
-                      releases[tmp[0]] = {};
-                    }
-                    releases[tmp[0]][tmp[1]] = versions[tmp[1]];
-                  }
-                }
-              }
-              $('#platform').on('change', changePlatform);
-              changePlatform();
             }
+            xreleases = xreleases.sort();
+            for (var i in xreleases) {
+              var tmp = xreleases[i].split("_");
+              if (tmp.length == 2) {
+                if (versions.hasOwnProperty(tmp[1])) {
+                  if (!releases.hasOwnProperty(tmp[0])) {
+                    releases[tmp[0]] = {};
+                  }
+                  releases[tmp[0]][tmp[1]] = versions[tmp[1]];
+                }
+              }
+            }
+            $("#platform").on("change", changePlatform);
+            changePlatform();
           }
-        );
+        });
       }
-      function changePlatform(){
-          platform = $('#platform').val().replace('DS', 'ds').replace('+', 'p');
-          options = releases[platform];
-          $('#version').empty();
-          $('#version').append($('<option></option>').val('').html('请选择'));
-          $.each(options, function(i, p) {
-              $('#version').append($('<option></option>').val(p).html(p));
-          });
-          $('#version').on('change', changeversion);
-          changeversion();
+      function changePlatform() {
+        platform = $("#platform").val().replace("DS", "ds").replace("+", "p");
+        options = releases[platform];
+        $("#version").empty();
+        $("#version").append($("<option></option>").val("").html("请选择"));
+        $.each(options, function (i, p) {
+          $("#version").append($("<option></option>").val(p).html(p));
+        });
+        $("#version").on("change", changeversion);
+        changeversion();
       }
       function processext(ext) {
         var obj = $("#ext_btn_" + ext.replace(/\./g, "·"));
@@ -227,44 +224,48 @@
         $("#ext").val(exts.join(","));
       }
       function createExtBtn() {
-        platform = $('#platform').val().replace('DS', 'ds').replace('+', 'p');
-        version = $('#version').val().split('-').at(-1);
+        platform = $("#platform").val().replace("DS", "ds").replace("+", "p");
+        version = $("#version").val().split("-").at(-1);
         var exts = [];
-        var extsurl = "https://cdn.jsdelivr.net/gh/wjz304/Redpill_CustomBuild@main/exts.json";
-        if (dev ==  "1") extsurl = "https://cdn.jsdelivr.net/gh/wjz304/Redpill_CustomBuild@main/exts_dev.json";
+        var extsurl =
+          "https://cdn.jsdelivr.net/gh/wjz304/Redpill_CustomBuild@main/exts.json";
+        if (dev == "1")
+          extsurl =
+            "https://cdn.jsdelivr.net/gh/wjz304/Redpill_CustomBuild@main/exts_dev.json";
 
-        httpGetAsync(
-          extsurl,
-          function (result) {
-            result = JSON.parse(result);
-            exts = result[platform + "_" + version];
-            var html = "";
-            let idx = 1;
-            for (var i in exts) {
-              if (exts[i].endsWith("*")) {
-                html +=
-                  '<button type="button" class="btn btn-primary btn-sm mt-2" id="ext_btn_' +
-                  exts[i].replace(/\./g, "·").replace(/\*/g, "") +
-                  '" disabled="true" autofocus="" >' +
-                  exts[i] +
-                  "</button>&nbsp;";
-              } else {
-                html +=
-                  '<button type="button" class="btn btn-primary btn-sm mt-2" id="ext_btn_' +
-                  exts[i].replace(/\./g, "·") +
-                  '" onclick="return processext(\'' + exts[i] + '\')" autofocus="" >' +
-                  exts[i] +
-                  "</button>&nbsp;";
-              }
-              if (idx++ % 15 == 0) html += "<br />";
+        httpGetAsync(extsurl, function (result) {
+          result = JSON.parse(result);
+          exts = result[platform + "_" + version];
+          var html = "";
+          let idx = 1;
+          for (var i in exts) {
+            if (exts[i].endsWith("*")) {
+              html +=
+                '<button type="button" class="btn btn-primary btn-sm mt-2" id="ext_btn_' +
+                exts[i].replace(/\./g, "·").replace(/\*/g, "") +
+                '" disabled="true" autofocus="" >' +
+                exts[i] +
+                "</button>&nbsp;";
+            } else {
+              html +=
+                '<button type="button" class="btn btn-primary btn-sm mt-2" id="ext_btn_' +
+                exts[i].replace(/\./g, "·") +
+                '" onclick="return processext(\'' +
+                exts[i] +
+                '\')" autofocus="" >' +
+                exts[i] +
+                "</button>&nbsp;";
             }
-            $("#ext").prop("readonly", true);
-            if (extbase == "") extbase = $($("#ext").parent().parent())[0].innerHTML;
-            if (extbase != "") $($("#ext").parent().parent())[0].innerHTML = extbase + html;
+            if (idx++ % 15 == 0) html += "<br />";
           }
-        );
+          $("#ext").prop("readonly", true);
+          if (extbase == "")
+            extbase = $($("#ext").parent().parent())[0].innerHTML;
+          if (extbase != "")
+            $($("#ext").parent().parent())[0].innerHTML = extbase + html;
+        });
       }
-      function changeversion(){
+      function changeversion() {
         createExtBtn();
       }
       function createInput(title, name, desc, opts, dft, req) {
@@ -327,17 +328,26 @@
         let formData = new FormData(form);
 
         body = {};
-        if (formData.get("inputs[platform]")) body["platform"] = formData.get("inputs[platform]");
-        if (formData.get("inputs[version]")) body["version"] = formData.get("inputs[version]");
-        if (formData.get("inputs[map]")) body["map"] = formData.get("inputs[map]");
-        if (formData.get("inputs[dtb]")) body["dtb"] = formData.get("inputs[dtb]");
+        if (formData.get("inputs[platform]"))
+          body["platform"] = formData.get("inputs[platform]");
+        if (formData.get("inputs[version]"))
+          body["version"] = formData.get("inputs[version]");
+        if (formData.get("inputs[map]"))
+          body["map"] = formData.get("inputs[map]");
+        if (formData.get("inputs[dtb]"))
+          body["dtb"] = formData.get("inputs[dtb]");
         if (formData.get("inputs[sn]")) body["sn"] = formData.get("inputs[sn]");
-        if (formData.get("inputs[mac]")) body["mac"] = formData.get("inputs[mac]");
-        if (formData.get("inputs[usb]")) body["usb"] = formData.get("inputs[usb]");
-        if (formData.get("inputs[ext]")) body["ext"] = formData.get("inputs[ext]");
-        if (formData.get("inputs[exp]")) body["exp"] = formData.get("inputs[exp]");
-        if (formData.get("inputs[jun]")) body["jun"] = formData.get("inputs[jun]");
-        if (dev ==  "1") body["dev"]  = "1";
+        if (formData.get("inputs[mac]"))
+          body["mac"] = formData.get("inputs[mac]");
+        if (formData.get("inputs[usb]"))
+          body["usb"] = formData.get("inputs[usb]");
+        if (formData.get("inputs[ext]"))
+          body["ext"] = formData.get("inputs[ext]");
+        if (formData.get("inputs[exp]"))
+          body["exp"] = formData.get("inputs[exp]");
+        if (formData.get("inputs[jun]"))
+          body["jun"] = formData.get("inputs[jun]");
+        if (dev == "1") body["dev"] = "1";
         title = "Custom " + formData.get("inputs[title]");
         var data =
           "title=" +
@@ -356,7 +366,9 @@
     class="logged-in env-production page-responsive"
     style="word-wrap: break-word"
   >
-    <div class="application-main mt-2 left-0 text-left p-3 mx-auto">
+    <div
+      class="application-main left-0 text-left p-3 mx-auto container-xl px-3 px-md-4 px-lg-5 mt-4"
+    >
       <pre
         style="
           font-family: ui-monospace, SFMono-Regular, SF Mono, Menlo, Consolas,
@@ -400,9 +412,11 @@
               >Redpill_CustomBuild</a
             >
           </strong>
-
-          <span></span
-          ><span class="Label Label--secondary v-align-middle mr-1"
+          <span
+            id="titleLabel"
+            class="Label Label--secondary v-align-middle mr-1"
+            id="titlelabel"
+            style="color: red"
             >Public</span
           >
         </div>
@@ -607,7 +621,10 @@
         </form>
       </div>
       <br />
-      <div id="content" class="highlight highlight-source-diff notranslate position-relative overflow-auto"></div>
+      <div
+        id="content"
+        class="highlight highlight-source-diff notranslate position-relative overflow-auto"
+      ></div>
       <!-- <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script> -->
       <script>
         httpGetAsync(
@@ -615,28 +632,30 @@
           function (result) {
             // var html = marked.parse(result).replace('<pre>', "<pre>\n");
             // 引入的文件就是一段md格式的代码，这里就直接解析一下算了
-            var html = result.replace(/\`+[^\n]*\n/g,'' );
+            var html = result.replace(/\`+[^\n]*\n/g, "");
             html = html.split("\n");
             // html = html.splice(1, html.length-2);
             var css = "";
-            for(var i in html) {
+            for (var i in html) {
               css = "";
-              if(html[i].substr(0, 1) == '-') {
-                css="pl-md"
+              if (html[i].substr(0, 1) == "-") {
+                css = "pl-md";
               } else {
-                css="pl-mi1";
+                css = "pl-mi1";
               }
-              if(css) {
-                html[i] = '<span class="' + css + '">' + html[i] + '</span>';
+              if (css) {
+                html[i] = '<span class="' + css + '">' + html[i] + "</span>";
               }
             }
             html = "<pre>" + html.join("\n") + "</pre>";
-            $('.highlight.highlight-source-diff').html(html);
+            $(".highlight.highlight-source-diff").html(html);
           }
         );
       </script>
     </div>
-    <footer class="footer width-full container-xl p-responsive">
+    <footer
+      class="footer width-full container-xl mt-3 text-center color-fg-muted"
+    >
       <a
         aria-label="Homepage"
         title="GitHub"
