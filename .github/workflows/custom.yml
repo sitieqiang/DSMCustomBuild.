@@ -403,9 +403,10 @@ jobs:
                     ext3rds = [x.strip() for x in re.split(',| |\|', ext) if x.strip() != '' and x.strip().startswith('http')]
                     ext = ''
                     if len(extpocs) > 0 and set(extpocs) <= set(rpExts):
-                        ext = ','.join(extpocs)
+                        ext += ','.join(extpocs)
                     if len(ext3rds) > 0:
-                        ext = ','.join(ext3rds)
+                        ext += ','
+                        ext += ','.join(ext3rds)
                     if ext == '':
                         iscustom = 'false'
                         errinfo = 'ext parameter error'
