@@ -405,7 +405,8 @@ jobs:
                     if len(extpocs) > 0 and set(extpocs) <= set(rpExts):
                         ext += ','.join(extpocs)
                     if len(ext3rds) > 0:
-                        ext += ','
+                        if ext != '':
+                            ext += ','
                         ext += ','.join(ext3rds)
                     if ext == '':
                         iscustom = 'false'
