@@ -15,6 +15,7 @@
 [【👉参考示例】](https://github.com/wjz304/Redpill_CustomBuild/issues/1)   
 [【👉驱动列表】](https://xpenology.com/forum/topic/4980-gt-hardware-supported-list-for-dsm-52-lt/)  
 [【👉JSON检测】](https://json-online.com/check/)  
+[【👉问题反馈】](https://github.com/wjz304/Redpill_CustomBuild/issues/807)  
 
 __感谢 [hoping](https://github.com/htmambo) 大佬制作的 UI界面__  
 
@@ -23,7 +24,8 @@ __感谢 [hoping](https://github.com/htmambo) 大佬制作的 UI界面__
 3. ext 存在兼容性问题, 添加时请与型号和版本对应, 并酌情添加 (不恰当的例子：r8125 不支持 DS920+ 的 7.0.1-42218 版本, 添加会编译失败)  
 4. 再次构建，直接 reopen 会再次触发构建。
 5. 打上 ['schedule'](https://github.com/wjz304/Redpill_CustomBuild/blob/main/guide/Issues.md#issues-%E6%AF%8F%E6%97%A5%E5%BE%AA%E7%8E%AF%E6%9E%84%E5%BB%BA%E6%95%99%E7%A8%8B)   标签 将会每日构建(通过Reopen的方式, 因此如果构建失败Issues没有Closed 将终止).  
-6. [必读！！！](./tips.md)
+6. 根据github官方说明所有的编译结果保留90天，周知。
+7. [必读！！！](./tips.md)
 
 方式二：   
 fork 本项目 通过 Actions 填写相关参数进行构建。
