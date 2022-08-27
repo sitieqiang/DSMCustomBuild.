@@ -757,6 +757,7 @@ jobs:
           # sed -i "s|#!/usr/bin/env bash|#!/usr/bin/env -S bash -x|g" ./build-loader.sh
           sudo ${bArgs} BRP_USER_CFG=user_config.json ./build-loader.sh "${platform}" "${version}"
 
+          ls ./custom/extensions | grep -v txt > exts.txt
           ls -al ./custom/extensions
 
       - name: Generate release tag
@@ -782,6 +783,7 @@ jobs:
         with:
           name: ${{ steps.tag.outputs.repository_name }}-Custom-${{ steps.tag.outputs.release_tag }}
           path: |
+            redpill-load/exts.txt
             redpill-load/user_config.json
             redpill-load/images/*.img
 
