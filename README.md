@@ -25,7 +25,8 @@ __感谢 [hoping](https://github.com/htmambo) 大佬制作的 UI界面__
 4. 再次构建，直接 reopen 会再次触发构建。
 5. 打上 ['schedule'](https://github.com/wjz304/Redpill_CustomBuild/blob/main/guide/Issues.md#issues-%E6%AF%8F%E6%97%A5%E5%BE%AA%E7%8E%AF%E6%9E%84%E5%BB%BA%E6%95%99%E7%A8%8B)   标签 将会每日构建(通过Reopen的方式, 因此如果构建失败Issues没有Closed 将终止).  
 6. 根据github官方说明所有的编译结果保留90天，周知。
-7. [必读！！！](./tips.md)
+7. 如果没有魔法，附件下载不下来，请参考 https://github.com/wjz304/hosts 设置hosts。
+8. [必读！！！](./tips.md)
 
 方式二：   
 fork 本项目 通过 Actions 填写相关参数进行构建。
