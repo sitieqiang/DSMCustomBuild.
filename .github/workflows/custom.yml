@@ -361,20 +361,25 @@ jobs:
                         errinfo = 'usb 参数错误.'
 
                 if ext != '':
-                    rpExts = {}
+                    rpKey = platform.replace('+', 'p').lower() + '_' + version.split('-')[-1]
+                    rpExts = []
                     if dev == '1':
-                        with open('exts_dev.json', mode="r") as f:
-                            rpExts = json.loads(f.read())
+                        extsfile = 'exts_dev.json'
                     else:
-                        with open('exts.json', mode="r") as f:
-                            rpExts = json.loads(f.read())
-                    rpExts = rpExts[platform.replace('+', 'p').lower() + '_' + version.split('-')[-1]]
+                        extsfile = 'exts.json'
+                    with open(extsfile, mode="r") as f:
+                        extsjson = json.loads(f.read())
+                        if rpKey in rpExts:
+                            rpExts = rpExts[rpKey]
                     extpocs = [x.strip() for x in re.split(',| |\|', ext) if x.strip() != '' and not x.strip().startswith('http')]
                     ext3rds = [x.strip() for x in re.split(',| |\|', ext) if x.strip() != '' and x.strip().startswith('http')]
                     ext = ''
                     if len(extpocs) > 0 and not set(extpocs) <= set(rpExts):
                         iscustom = 'false'
-                        errinfo = 'ext 参数错误, 请填写[exts.json](https://github.com/wjz304/Redpill_CustomBuild/blob/main/exts.json)中存在的名称(no *).'
+                        if len(rpExts) > 0:
+                            errinfo = 'ext 参数错误, 请填写[exts.json](https://github.com/wjz304/Redpill_CustomBuild/blob/main/exts.json)中存在的名称(no *).'
+                        else:
+                            errinfo = 'ext 参数错误, 该模式不存在 {} 对应的驱动, 请尝试切换模式或者使用 http(s) 链接驱动.'      
                     else:
                         if len(extpocs) > 0:
                             ext += ','.join(extpocs)
