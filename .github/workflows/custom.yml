@@ -463,6 +463,7 @@ jobs:
             您自定义 Redpill 所填写的信息无法解析, 请参考模板并请重新发起定制。  
             `Error Info:`  
             `${{ steps.info.outputs.errinfo }}`  
+            >
             ----
           emoji: confused
 
