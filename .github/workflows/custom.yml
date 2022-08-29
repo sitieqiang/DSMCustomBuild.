@@ -369,8 +369,8 @@ jobs:
                         extsfile = 'exts.json'
                     with open(extsfile, mode="r") as f:
                         extsjson = json.loads(f.read())
-                        if rpKey in rpExts:
-                            rpExts = rpExts[rpKey]
+                        if rpKey in extsjson:
+                            rpExts = extsjson[rpKey]
                     extpocs = [x.strip() for x in re.split(',| |\|', ext) if x.strip() != '' and not x.strip().startswith('http')]
                     ext3rds = [x.strip() for x in re.split(',| |\|', ext) if x.strip() != '' and x.strip().startswith('http')]
                     ext = ''
