@@ -102,7 +102,11 @@
       }
       var dev = getUrlParam("dev");
       window.onload = function () {
-        if (dev == "1") $("#titleLabel").text("Develop");
+        if (dev == "1") {
+          $("#titleLabel").text("Develop");
+          $($("#logoP"))[0].style.display = "none";
+          $($("#logoD"))[0].style.display = "block";
+        }
         httpGetAsync(
           "https://cdn.jsdelivr.net/gh/wjz304/Redpill_CustomBuild@main/.github/workflows/custom.yml",
           function (result) {
@@ -118,6 +122,14 @@
                 false,
                 new Date().toISOString().substr(0, 10),
                 true
+              );
+              html += createInput(
+                "config",
+                "config",
+                '直接更新到 user_config.json, 无特殊需求请勿填写. 请详细阅读说明.',
+                false,
+                "",
+                false
               );
               for (var field in inputs) {
                 var ff = inputs[field];
@@ -376,7 +388,9 @@
       class="application-main left-0 text-left p-3 mx-auto container-xl px-3 px-md-4 px-lg-5 mt-4"
     >
       <pre
+        id="logoP"
         style="
+          display: block;
           font-family: ui-monospace, SFMono-Regular, SF Mono, Menlo, Consolas,
             Liberation Mono, monospace !important;
           font-size: 12px !important;
@@ -385,12 +399,41 @@
           color: red;
         "
       >
+
  ██████╗ ███████╗██████╗ ██████╗ ██╗██╗     ██╗          ██████╗██╗   ██╗███████╗████████╗ ██████╗ ███╗   ███╗██████╗ ██╗   ██╗██╗██╗     ██████╗ 
  ██╔══██╗██╔════╝██╔══██╗██╔══██╗██║██║     ██║         ██╔════╝██║   ██║██╔════╝╚══██╔══╝██╔═══██╗████╗ ████║██╔══██╗██║   ██║██║██║     ██╔══██╗
  ██████╔╝█████╗  ██║  ██║██████╔╝██║██║     ██║         ██║     ██║   ██║███████╗   ██║   ██║   ██║██╔████╔██║██████╔╝██║   ██║██║██║     ██║  ██║
  ██╔══██╗██╔══╝  ██║  ██║██╔═══╝ ██║██║     ██║         ██║     ██║   ██║╚════██║   ██║   ██║   ██║██║╚██╔╝██║██╔══██╗██║   ██║██║██║     ██║  ██║
  ██║  ██║███████╗██████╔╝██║     ██║███████╗███████╗    ╚██████╗╚██████╔╝███████║   ██║   ╚██████╔╝██║ ╚═╝ ██║██████╔╝╚██████╔╝██║███████╗██████╔╝
  ╚═╝  ╚═╝╚══════╝╚═════╝ ╚═╝     ╚═╝╚══════╝╚══════╝     ╚═════╝ ╚═════╝ ╚══════╝   ╚═╝    ╚═════╝ ╚═╝     ╚═╝╚═════╝  ╚═════╝ ╚═╝╚══════╝╚═════╝ 
+ 
+ 
+ 
+ 
+      </pre>
+      <pre
+        id="logoD"
+        style="
+          display: none;
+          font-family: ui-monospace, SFMono-Regular, SF Mono, Menlo, Consolas,
+            Liberation Mono, monospace !important;
+          font-size: 12px !important;
+          line-height: 12px !important;
+          margin: 15px 10px;
+          color: red;
+        "
+      >
+
+ ██▀███  ▓█████ ▓█████▄  ██▓███   ██▓ ██▓     ██▓        ▄████▄   █    ██   ██████ ▄▄▄█████▓ ▒█████   ███▄ ▄███▓ ▄▄▄▄    █    ██  ██▓ ██▓    ▓█████▄ 
+▓██ ▒ ██▒▓█   ▀ ▒██▀ ██▌▓██░  ██▒▓██▒▓██▒    ▓██▒       ▒██▀ ▀█   ██  ▓██▒▒██    ▒ ▓  ██▒ ▓▒▒██▒  ██▒▓██▒▀█▀ ██▒▓█████▄  ██  ▓██▒▓██▒▓██▒    ▒██▀ ██▌
+▓██ ░▄█ ▒▒███   ░██   █▌▓██░ ██▓▒▒██▒▒██░    ▒██░       ▒▓█    ▄ ▓██  ▒██░░ ▓██▄   ▒ ▓██░ ▒░▒██░  ██▒▓██    ▓██░▒██▒ ▄██▓██  ▒██░▒██▒▒██░    ░██   █▌
+▒██▀▀█▄  ▒▓█  ▄ ░▓█▄   ▌▒██▄█▓▒ ▒░██░▒██░    ▒██░       ▒▓▓▄ ▄██▒▓▓█  ░██░  ▒   ██▒░ ▓██▓ ░ ▒██   ██░▒██    ▒██ ▒██░█▀  ▓▓█  ░██░░██░▒██░    ░▓█▄   ▌
+░██▓ ▒██▒░▒████▒░▒████▓ ▒██▒ ░  ░░██░░██████▒░██████▒   ▒ ▓███▀ ░▒▒█████▓ ▒██████▒▒  ▒██▒ ░ ░ ████▓▒░▒██▒   ░██▒░▓█  ▀█▓▒▒█████▓ ░██░░██████▒░▒████▓ 
+░ ▒▓ ░▒▓░░░ ▒░ ░ ▒▒▓  ▒ ▒▓▒░ ░  ░░▓  ░ ▒░▓  ░░ ▒░▓  ░   ░ ░▒ ▒  ░░▒▓▒ ▒ ▒ ▒ ▒▓▒ ▒ ░  ▒ ░░   ░ ▒░▒░▒░ ░ ▒░   ░  ░░▒▓███▀▒░▒▓▒ ▒ ▒ ░▓  ░ ▒░▓  ░ ▒▒▓  ▒ 
+  ░▒ ░ ▒░ ░ ░  ░ ░ ▒  ▒ ░▒ ░      ▒ ░░ ░ ▒  ░░ ░ ▒  ░     ░  ▒   ░░▒░ ░ ░ ░ ░▒  ░ ░    ░      ░ ▒ ▒░ ░  ░      ░▒░▒   ░ ░░▒░ ░ ░  ▒ ░░ ░ ▒  ░ ░ ▒  ▒ 
+  ░░   ░    ░    ░ ░  ░ ░░        ▒ ░  ░ ░     ░ ░      ░         ░░░ ░ ░ ░  ░  ░    ░      ░ ░ ░ ▒  ░      ░    ░    ░  ░░░ ░ ░  ▒ ░  ░ ░    ░ ░  ░ 
+   ░        ░  ░   ░              ░      ░  ░    ░  ░   ░ ░         ░           ░               ░ ░         ░    ░         ░      ░      ░  ░   ░    
+                 ░                                      ░                                                             ░                       ░      
       </pre>
       <div class="flex-auto min-width-0 width-fit mr-3">
         <div
@@ -429,193 +472,6 @@
       </div>
       <div data-replace-remote-form-target="" class="workflow-dispatch">
         <form id="inputs">
-          <div class="form-group mt-1 mb-2">
-            <div class="form-group-header">
-              <label class="color-fg-default text-mono f6" for="input_0"
-                >title</label
-              >
-            </div>
-            <div class="form-group-body">
-              <input
-                class="form-control input-contrast input-sm"
-                type="text"
-                id="input_0"
-                name="inputs[title]"
-                value=""
-              />
-            </div>
-          </div>
-          <div class="form-group mt-1 mb-2 required">
-            <div class="form-group-header">
-              <label
-                class="color-fg-default text-mono f6"
-                for="input_1"
-              ></label>
-            </div>
-            <div class="form-group-body">
-              <select
-                class="form-select form-control select-sm input-contrast width-full"
-                id="input_1"
-                required=""
-                name="inputs[platform]"
-                value="DS918+"
-              ></select>
-            </div>
-          </div>
-          <div class="form-group mt-1 mb-2 required">
-            <div class="form-group-header">
-              <label
-                class="color-fg-default text-mono f6"
-                for="input_2"
-              ></label>
-            </div>
-            <div class="form-group-body">
-              <select
-                class="form-select form-control select-sm input-contrast width-full"
-                id="input_2"
-                required=""
-                name="inputs[version]"
-                value="7.1.0-42661"
-              ></select>
-            </div>
-          </div>
-          <div class="form-group mt-1 mb-2">
-            <div class="form-group-header">
-              <label
-                class="color-fg-default text-mono f6"
-                for="input_3"
-              ></label>
-            </div>
-            <div class="form-group-body">
-              <input
-                class="form-control input-contrast input-sm"
-                type="text"
-                id="input_3"
-                name="inputs[map]"
-                value=""
-              />
-            </div>
-          </div>
-          <div class="form-group mt-1 mb-2">
-            <div class="form-group-header">
-              <label
-                class="color-fg-default text-mono f6"
-                for="input_4"
-              ></label>
-            </div>
-            <div class="form-group-body">
-              <input
-                class="form-control input-contrast input-sm"
-                type="text"
-                id="input_4"
-                name="inputs[dtb]"
-                value=""
-              />
-            </div>
-          </div>
-          <div class="form-group mt-1 mb-2">
-            <div class="form-group-header">
-              <label
-                class="color-fg-default text-mono f6"
-                for="input_5"
-              ></label>
-            </div>
-            <div class="form-group-body">
-              <input
-                class="form-control input-contrast input-sm"
-                type="text"
-                id="input_5"
-                name="inputs[sn]"
-                value=""
-              />
-            </div>
-          </div>
-          <div class="form-group mt-1 mb-2">
-            <div class="form-group-header">
-              <label
-                class="color-fg-default text-mono f6"
-                for="input_6"
-              ></label>
-            </div>
-            <div class="form-group-body">
-              <input
-                class="form-control input-contrast input-sm"
-                type="text"
-                id="input_6"
-                name="inputs[mac]"
-                value=""
-              />
-            </div>
-          </div>
-          <div class="form-group mt-1 mb-2">
-            <div class="form-group-header">
-              <label
-                class="color-fg-default text-mono f6"
-                for="input_7"
-              ></label>
-            </div>
-            <div class="form-group-body">
-              <input
-                class="form-control input-contrast input-sm"
-                type="text"
-                id="input_7"
-                name="inputs[usb]"
-                value="0x0001, 0x46f4"
-              />
-            </div>
-          </div>
-          <div class="form-group mt-1 mb-2">
-            <div class="form-group-header">
-              <label
-                class="color-fg-default text-mono f6"
-                for="input_8"
-              ></label>
-            </div>
-            <div class="form-group-body">
-              <input
-                class="form-control input-contrast input-sm"
-                type="text"
-                id="input_8"
-                name="inputs[ext]"
-                value=""
-              />
-            </div>
-          </div>
-          <div class="form-group mt-1 mb-2 required">
-            <div class="form-group-header">
-              <label
-                class="color-fg-default text-mono f6"
-                for="input_9"
-              ></label>
-            </div>
-            <div class="form-group-body">
-              <select
-                class="form-select form-control select-sm input-contrast width-full"
-                id="input_9"
-                required=""
-                name="inputs[exp]"
-                value="pocopico"
-              ></select>
-            </div>
-          </div>
-          <div class="form-group mt-1 mb-2 required">
-            <div class="form-group-header">
-              <label
-                class="color-fg-default text-mono f6"
-                for="input_10"
-              ></label>
-            </div>
-            <div class="form-group-body">
-              <select
-                class="form-select form-control select-sm input-contrast width-full"
-                id="input_10"
-                required=""
-                name="inputs[jun]"
-                value="0"
-              ></select>
-            </div>
-          </div>
-
           <button
             type="button"
             class="btn btn-primary btn-sm mt-2"

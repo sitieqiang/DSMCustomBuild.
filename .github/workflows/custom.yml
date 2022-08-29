@@ -81,7 +81,7 @@ on:
         - 'jumkey'
 
       jun:
-        description: '请选择是否jun模式编译. (仅7.0.1-42218 版本可选, jun模式 支持 7.0.1~7.1.0u4 的 DSM.)'
+        description: '请选择是否jun模式编译. (仅7.0.1-42218 版本可选, jun模式 支持 7.0.1~7.1.1 的 DSM.)'
         required: true
         default: '0' 
         type: choice
@@ -89,48 +89,6 @@ on:
         - '0'
         - '1'
 
-  workflow_call:
-    inputs:
-      platform:
-        required: true
-        type: string
-
-      version:
-        required: true
-        type: string
-
-      map: 
-        required: true
-        type: string
-
-      dtb: 
-        required: true
-        type: string
-
-      sn:
-        required: true
-        type: string
-
-      mac: 
-        required: true
-        type: string
-
-      usb: 
-        required: true
-        type: string
-
-      ext:
-        required: true
-        type: string
-      
-      exp: 
-        required: true
-        type: string
-
-      jun:
-        required: true
-        type: string
-        
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -236,10 +194,10 @@ jobs:
                 issues = 'false'
                 iscustom = 'true'
                 errinfo = ''
-                dev = '0'
 
                 platform = 'DS3622xs+'
                 version = '7.1.0-42661'
+                config = ''
                 map = ''
                 dtb = ''
                 sn = ''
@@ -248,6 +206,7 @@ jobs:
                 ext = ''
                 exp = 'pocopico'
                 jun = '0'
+                dev = '0'
 
                 if '${{ github.event_name }}' == 'issues':
                     if '${{ env.issuetitle }}'.lower().startswith('custom'):
@@ -258,10 +217,12 @@ jobs:
                             body = json.loads('${{ env.issuebody }}')
                             if len(body) == 0:
                                 iscustom = 'false'
-                                errinfo = 'body error, body is null'
+                                errinfo = 'body 错误, body is null'
                             else:
+                                # l = lambda x: x.strip() if isinstance(x, str) else str(x)
                                 if 'platform' in body: platform = body['platform'].strip()
                                 if 'version' in body: version = body['version'].strip()
+                                if 'config' in body: config = body['config'] #l(body['config']).strip()
                                 if 'map' in body: map = body['map'].strip()
                                 if 'dtb' in body: dtb = body['dtb'].strip()
                                 if 'sn' in body: sn = body['sn'].strip()
@@ -271,14 +232,15 @@ jobs:
                                 if 'exp' in body: exp = body['exp'].strip()
                                 if 'jun' in body: jun = body['jun'].strip()
                                 if 'dev' in body: dev = body['dev'].strip()
-                        except Exception as err:
+                        except Exception as e:
                             iscustom = 'false'
-                            errinfo = 'body error, {}.'.format(err)
+                            errinfo = 'body 错误, 不符合JSON规范 {}.'.format(e)
                     else:
                         iscustom = 'false'
                 else:
                     platform = '${{ inputs.platform }}'.strip()
                     version = '${{ inputs.version }}'.strip()
+                    # config = '${{ inputs.config }}'.strip()   # Actions 限制10个参数
                     map = '${{ inputs.map }}'.strip()
                     dtb = '${{ inputs.dtb }}'.strip()
                     sn = '${{ inputs.sn }}'.strip()
@@ -287,15 +249,23 @@ jobs:
                     ext = '${{ inputs.ext }}'.strip()
                     exp = '${{ inputs.exp }}'.strip()
                     jun = '${{ inputs.jun }}'.strip()
-                    # dev = '${{ inputs.dev }}'.strip()
+                    # dev = '${{ inputs.dev }}'.strip()         # Actions 限制10个参数
 
                 if not platform in ['DS3615xs', 'DS3617xs', 'DS918+', 'DS920+', 'DS3622xs+']:
                     iscustom = 'false'
-                    errinfo = 'platform parameter error'
+                    errinfo = 'platform 参数错误, 当前仅支持 DS3615xs, DS3617xs, DS918+, DS920+, DS3622xs+ .'
 
                 if not version in ['7.1.1-42951', '7.1.0-42661', '7.0.1-42218', '6.2.4-25556']:
                     iscustom = 'false'
-                    errinfo = 'version parameter error'
+                    errinfo = 'version 参数错误, 当前仅支持 7.1.1-42951, 7.1.0-42661, 7.0.1-42218, 6.2.4-25556 .'
+
+                if config != '':
+                    try:
+                        config = json.dumps(config)
+                        json.loads(config)
+                    except Exception as e:
+                        iscustom = 'false'
+                        errinfo = 'config 参数错误, 不符合JSON规范 {}.'.format(e)
 
                 if map != '':
                     maps = [x.strip() for x in re.split(',| |\|', map) if x.strip() != '']
@@ -303,7 +273,7 @@ jobs:
                         map = ','.join(maps)
                     else:
                         iscustom = 'false'
-                        errinfo = 'map parameter error'
+                        errinfo = 'map 参数错误, DiskIdxMap 的位数应该是 SataPortMap 的2倍, 并以 “,” 间隔.'
 
                 if dtb != '':
                     url = dtb
@@ -347,30 +317,30 @@ jobs:
                                     if os.path.exists('dtc'):
                                         print('./dtc -q -I dts -O dtb {} >{}.dtb'.format(down, name))
                                         os.system('sudo chmod a+x dtc')
+                                        # os.system('sudo ./dtc -q -I dts -O dtb {} >{}.dtb'.format(down, name))
                                         p = subprocess.Popen('sudo ./dtc -q -I dts -O dtb {} >{}.dtb'.format(down, name), shell=True, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
                                         errinfo = p.stderr.read().decode('utf-8')
-                                        os.system('sudo ./dtc -q -I dts -O dtb {} >{}.dtb'.format(down, name))
                                         if os.path.exists('{}.dtb'.format(name)) and os.path.getsize('{}.dtb'.format(name)) > 0:
                                             print('dtc ok ...')
                                             dtb = os.path.abspath('{}.dtb'.format(name))
                                         else:
                                             iscustom = 'false'
-                                            errinfo = 'dtb parameter error, <{}>.'.format(errinfo.replace('\r', '').replace('\n', ' '))
+                                            errinfo = 'dtb 参数错误, dts文件内容存在错误 <{}>.'.format(errinfo.replace('\r', '').replace('\n', ' '))
                                     else:
                                         iscustom = 'false'
-                                        errinfo = 'dtb parameter error, <dtc tool download error, Please try again later>.'
+                                        errinfo = 'dtb 参数错误, 下载 dtc(dts->dtb tools) 失败, 可能是服务器压力过大, 请稍后重试, 或者直接使用 dtb 文件跳过转换.'
                                 else:
                                     dtb = os.path.abspath(down)
                             else:
                                 iscustom = 'false'
-                                errinfo = 'dtb parameter error, <urlfile error no valid ".dts/.dtb" file found>.'
+                                errinfo = 'dtb 参数错误, 该url下载的文件不是所支持的格式.'
                     except Exception as err:
                         iscustom = 'false'
-                        errinfo = 'dtb parameter error, {}.'.format(err)
+                        errinfo = 'dtb 参数错误, 可能是服务器压力过大, 请稍后重试. {} .'.format(err)
 
                 if sn != '' and not sn.isalnum():
                     iscustom = 'false'
-                    errinfo = 'sn parameter error'
+                    errinfo = 'sn 参数错误.'
 
                 if mac != '':
                     macs = [x.strip() for x in re.split(',| |\|', mac) if x.strip() != '']
@@ -378,7 +348,7 @@ jobs:
                         mac = ','.join(macs)
                     else:
                         iscustom = 'false'
-                        errinfo = 'mac parameter error'
+                        errinfo = 'mac 参数错误.'
 
                 if usb != '':
                     usbs = [x.strip() for x in re.split(',| |\|', usb) if x.strip() != '']
@@ -388,7 +358,7 @@ jobs:
                         usb = ','.join(usbs)
                     else:
                         iscustom = 'false'
-                        errinfo = 'usb parameter error'
+                        errinfo = 'usb 参数错误.'
 
                 if ext != '':
                     rpExts = {}
@@ -410,15 +380,18 @@ jobs:
                         ext += ','.join(ext3rds)
                     if ext == '':
                         iscustom = 'false'
-                        errinfo = 'ext parameter error'
+                        errinfo = 'ext 参数错误. 请填写[exts.json](https://github.com/wjz304/Redpill_CustomBuild/blob/main/exts.json)中存在的名称(no *)或者有效的 http(s) 链接.'
 
                 if not exp in ['pocopico', 'jumkey']:
                     iscustom = 'false'
-                    errinfo = 'exp parameter error'
+                    errinfo = 'exp 参数错误, 当前仅支持 pocopico, jumkey.'
 
                 if not jun in ['0', '1']:
                     iscustom = 'false'
-                    errinfo = 'jun parameter error'
+                    errinfo = 'jun 参数错误, 当前仅支持 "0", "1".'
+
+                if not dev in ['0', '1']:
+                    dev = '0'
 
                 set_output('issues', issues)
                 set_output('iscustom', iscustom)
@@ -426,6 +399,7 @@ jobs:
 
                 set_output('platform', platform)
                 set_output('version', version)
+                set_output('config', config)
                 set_output('map', map)
                 set_output('dtb', dtb)
                 set_output('sn', sn)
@@ -443,6 +417,7 @@ jobs:
           echo errinfo:   "${{ steps.info.outputs.errinfo }}"
           echo platform:  "${{ steps.info.outputs.platform }}"
           echo version:   "${{ steps.info.outputs.version }}"
+          echo config:    "${{ steps.info.outputs.config }}"
           echo map:       "${{ steps.info.outputs.map }}"
           echo dtb:       "${{ steps.info.outputs.dtb }}"
           echo sn:        "${{ steps.info.outputs.sn }}"
@@ -451,6 +426,7 @@ jobs:
           echo ext:       "${{ steps.info.outputs.ext }}"
           echo exp:       "${{ steps.info.outputs.exp }}"
           echo jun:       "${{ steps.info.outputs.jun }}"
+          echo dev:        "${{ steps.info.outputs.dev }}"
 
       - name: Add Issues labels
         if: steps.info.outputs.issues == 'true' && steps.info.outputs.iscustom == 'true'
@@ -469,13 +445,10 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
           issue-number: ${{ env.issuenumber }}
           body: |
-            ${{ env.issueauth }} 您好.
-            您自定义的 Redpill 已开始构建。请前往下面的 URL 查看详细信息。
-            > ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+            ${{ env.issueauth }} 您好.  
+            您自定义的 Redpill 已开始构建。请前往下面的 URL 查看详细信息。  
+            > ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}  
             ----
-            Hi ${{ env.issueauth }}. 
-            Your customized Redpill has started building. Please click the URL below to view the details.
-            > ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
           emoji: heart
 
       - name: Create Issues comment
@@ -486,15 +459,11 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
           issue-number: ${{ env.issuenumber }}
           body: |
-            ${{ env.issueauth }} 您好.
+            ${{ env.issueauth }} 您好.  
             您自定义 Redpill 所填写的信息无法解析, 请参考模板并请重新发起定制。  
-            error info: ${{ steps.info.outputs.errinfo }}
-            > 
+            `Error Info:`  
+            `${{ steps.info.outputs.errinfo }}`  
             ----
-            Hi ${{ env.issueauth }}. 
-            The information filled in by your customized Redpill cannot be parsed. Please refer to the template and restart customization.
-            error info: ${{ steps.info.outputs.errinfo }}
-            > 
           emoji: confused
 
       - name: Create Config File
@@ -532,32 +501,37 @@ jobs:
                     os.system('sed -i "s|echo.*\$(generateSerial \$1)|echo \$(generateSerial \$1)|g" serialnumbergen.sh')
                     dat = os.popen('bash ./serialnumbergen.sh ${{ steps.info.outputs.platform }}').readlines()
 
-                if '${{ steps.info.outputs.sn }}' != '':
-                    config["extra_cmdline"]["sn"] = '${{ steps.info.outputs.sn }}'
-                elif len(dat) == 2:
-                    config["extra_cmdline"]["sn"] = dat[1].strip()
+                if '${{ steps.info.outputs.config }}' != '':
+                    inconfig = json.loads('${{ steps.info.outputs.config }}')
+                    config.update(inconfig)
 
-                if '${{ steps.info.outputs.mac }}' != '':
-                    macs = '${{ steps.info.outputs.mac }}'.split(',')
-                    for index, item in enumerate(macs):
-                        config["extra_cmdline"]["mac{}".format(index+1)] = item.replace(':', '').upper()
-                    config["extra_cmdline"]["netif_num"] = len(macs)
-                elif len(dat) == 2:
-                    config["extra_cmdline"]["mac1"] = dat[0].strip().replace(':', '')
-                    config["extra_cmdline"]["mac2"] = hex(int(dat[0].strip().replace(':', ''), 16) + 1)[2:].rjust(12,'0').upper()
-                    config["extra_cmdline"]["netif_num"] = 2
+                if "extra_cmdline" in config:
+                    if '${{ steps.info.outputs.sn }}' != '':
+                        config["extra_cmdline"]["sn"] = '${{ steps.info.outputs.sn }}'
+                    elif len(dat) == 2:
+                        config["extra_cmdline"]["sn"] = dat[1].strip()
 
-                if '${{ steps.info.outputs.map }}' != '':
-                    maps = '${{ steps.info.outputs.map }}'.split(',')
-                    if len(maps) == 2:
-                        config["extra_cmdline"]["SataPortMap"] = maps[0]
-                        config["extra_cmdline"]["DiskIdxMap"] = maps[1]
+                    if '${{ steps.info.outputs.mac }}' != '':
+                        macs = '${{ steps.info.outputs.mac }}'.split(',')
+                        for index, item in enumerate(macs):
+                            config["extra_cmdline"]["mac{}".format(index+1)] = item.replace(':', '').upper()
+                        config["extra_cmdline"]["netif_num"] = len(macs)
+                    elif len(dat) == 2:
+                        config["extra_cmdline"]["mac1"] = dat[0].strip().replace(':', '')
+                        config["extra_cmdline"]["mac2"] = hex(int(dat[0].strip().replace(':', ''), 16) + 1)[2:].rjust(12,'0').upper()
+                        config["extra_cmdline"]["netif_num"] = 2
 
-                if '${{ steps.info.outputs.usb }}' != '':
-                    usbs = '${{ steps.info.outputs.usb }}'.split(',')
-                    if len(usbs) == 2:
-                        config["extra_cmdline"]["pid"] = usbs[0]
-                        config["extra_cmdline"]["vid"] = usbs[1]
+                    if '${{ steps.info.outputs.map }}' != '':
+                        maps = '${{ steps.info.outputs.map }}'.split(',')
+                        if len(maps) == 2:
+                            config["extra_cmdline"]["SataPortMap"] = maps[0]
+                            config["extra_cmdline"]["DiskIdxMap"] = maps[1]
+
+                    if '${{ steps.info.outputs.usb }}' != '':
+                        usbs = '${{ steps.info.outputs.usb }}'.split(',')
+                        if len(usbs) == 2:
+                            config["extra_cmdline"]["pid"] = usbs[0]
+                            config["extra_cmdline"]["vid"] = usbs[1]
 
                 print(json.dumps(config, indent=4))
 
@@ -797,7 +771,8 @@ jobs:
           fi
           echo "😞 😔 😟 😕 🙁 ☹️ 😣 😖 😫 😩 🥺 😢  " >> $GITHUB_STEP_SUMMARY
           echo "您自定义 Redpill 所填写的信息无法解析, 请参考模板并请重新发起定制。  " >> $GITHUB_STEP_SUMMARY
-          echo "error info: ${{ steps.info.outputs.errinfo }}  " >> $GITHUB_STEP_SUMMARY
+          echo "`Error Info:`  " >> $GITHUB_STEP_SUMMARY
+          echo "`${{ steps.info.outputs.errinfo }}`  " >> $GITHUB_STEP_SUMMARY
 
       - name: Create Issues Comment
         if: steps.info.outputs.issues == 'true' && steps.info.outputs.iscustom == 'true' && success()
@@ -811,9 +786,6 @@ jobs:
             您自定义的 Redpill 已构建完成。请前往下面的 URL 下载。
             > ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}  
             ----
-            Hi ${{ env.issueauth }}. 
-            Your customized Redpill has been builded. Please click the URL below to download it.
-            > ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
           emoji: hooray
 
       - name: Close Issues
@@ -836,8 +808,5 @@ jobs:
             您自定义的 Redpill 构建失败。请前往下面的 URL 查看详细信息。请自行关闭本 Issues 并在进行调整后重新创建一个 Issues 来发起重新构建。
             > ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}  
             ----
-            Hi ${{ env.issueauth }}. 
-            Your customized Redpill build failed. Please click the URL below to view the details. Please close this issue by yourself and re create an issue after adjustment to initiate the rebuild.
-            > ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
-          emoji: hooray
+          emoji: confused
 
