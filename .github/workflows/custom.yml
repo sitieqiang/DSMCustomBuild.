@@ -372,15 +372,19 @@ jobs:
                     extpocs = [x.strip() for x in re.split(',| |\|', ext) if x.strip() != '' and not x.strip().startswith('http')]
                     ext3rds = [x.strip() for x in re.split(',| |\|', ext) if x.strip() != '' and x.strip().startswith('http')]
                     ext = ''
-                    if len(extpocs) > 0 and set(extpocs) <= set(rpExts):
-                        ext += ','.join(extpocs)
-                    if len(ext3rds) > 0:
-                        if ext != '':
-                            ext += ','
-                        ext += ','.join(ext3rds)
-                    if ext == '':
+                    if len(extpocs) > 0 and not set(extpocs) <= set(rpExts):
                         iscustom = 'false'
-                        errinfo = 'ext 参数错误. 请填写[exts.json](https://github.com/wjz304/Redpill_CustomBuild/blob/main/exts.json)中存在的名称(no *)或者有效的 http(s) 链接.'
+                        errinfo = 'exp 参数错误, 请填写[exts.json](https://github.com/wjz304/Redpill_CustomBuild/blob/main/exts.json)中存在的名称(no *).'
+                    else:
+                        if len(extpocs) > 0:
+                            ext += ','.join(extpocs)
+                        if len(ext3rds) > 0:
+                            if ext != '':
+                                ext += ','
+                            ext += ','.join(ext3rds)
+                        if ext == '':
+                            iscustom = 'false'
+                            errinfo = 'ext 参数错误. 请填写有效的 http(s) 链接.'
 
                 if not exp in ['pocopico', 'jumkey']:
                     iscustom = 'false'
