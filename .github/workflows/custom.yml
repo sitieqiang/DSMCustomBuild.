@@ -374,7 +374,7 @@ jobs:
                     ext = ''
                     if len(extpocs) > 0 and not set(extpocs) <= set(rpExts):
                         iscustom = 'false'
-                        errinfo = 'exp 参数错误, 请填写[exts.json](https://github.com/wjz304/Redpill_CustomBuild/blob/main/exts.json)中存在的名称(no *).'
+                        errinfo = 'ext 参数错误, 请填写[exts.json](https://github.com/wjz304/Redpill_CustomBuild/blob/main/exts.json)中存在的名称(no *).'
                     else:
                         if len(extpocs) > 0:
                             ext += ','.join(extpocs)
