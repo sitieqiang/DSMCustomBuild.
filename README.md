@@ -13,7 +13,7 @@
 [【👉快速创建】(dev)](https://wjz304.github.io/Redpill_CustomBuild/Issues.html?dev=1)  增加DS918+的7.1.1(自行测试)，修复部分驱动。  
 [【👉图文说明】](https://github.com/wjz304/Redpill_CustomBuild/blob/main/guide/Issues.md)  
 [【👉参考示例】](https://github.com/wjz304/Redpill_CustomBuild/issues/1)   
-[【👉驱动列表】](https://xpenology.com/forum/topic/4980-gt-hardware-supported-list-for-dsm-52-lt/)  
+[【👉驱动列表】](https://xpenology.com/forum/topic/4980-gt-hardware-supported-list-for-dsm-52-lt/)  如果报 Checksum 错, 请尝试使用(dev)模式, (dev)模式默认使用我修复的库。  
 [【👉JSON检测】](https://json-online.com/check/)  
 [【👉问题反馈】](https://github.com/wjz304/Redpill_CustomBuild/issues/807)  
 
@@ -80,7 +80,12 @@ jun       | ×    |"0"             | 仅7.0.1-42218 版本可以选择jun模式�
       "version":"7.1.1-42951",  
       "ext":"r8125, e1000, e1000e, vmxnet3, https://raw.githubusercontent.com/wjz304/rp-ext/main/rtl8150/rpext-index.json"  
     }
-
+  - {
+      "platform":"DS3622xs+",
+      "version":"7.0.1-42218",
+      "config":{"synoinfo": {"maxlanport": "4","esataportcfg": "0xfffc","internalportcfg": "0x3","maxdisks": "16"}},
+      "ext":"r8125, e1000, e1000e, vmxnet3"
+    }
 
 ####  body 高级自定义：
 `"由于权限太高, 防止有些人执行非法操作, 仅仓库作者可操作, 请联系该仓库管理员或者fork到自己名下操作."`  
