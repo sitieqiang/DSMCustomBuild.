@@ -27,7 +27,7 @@ __感谢 [hoping](https://github.com/htmambo) 大佬制作的 UI界面__
 6. 根据github官方说明所有的编译结果保留90天，周知。
 7. 如果没有魔法，附件下载不下来，请参考 https://github.com/wjz304/hosts 设置hosts。
 8. [必读！！！](./tips.md)
-9. 需要一个群吗？QQ群：21609194  TG：https://t.me/+UEYA76lfkORjNGI1
+9. 需要一个群吗？QQ群：[21609194](https://qm.qq.com/cgi-bin/qm/qr?k=8AU8VJ82OR2HB_77g3vsjGKA-rm-p67B&jump_from=webapi)  TG：[https://t.me/Redpill_CustomBuild](https://t.me/Redpill_CustomBuild)
 
 方式二：   
 fork 本项目 通过 Actions 填写相关参数进行构建。
