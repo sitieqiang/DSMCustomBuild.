@@ -379,7 +379,7 @@ jobs:
                         if len(rpExts) > 0:
                             errinfo = 'ext 参数错误, 请填写[exts.json](https://github.com/wjz304/Redpill_CustomBuild/blob/main/exts.json)中存在的名称(no *).'
                         else:
-                            errinfo = 'ext 参数错误, 该模式不存在 {} 对应的驱动, 请尝试切换模式或者使用 http(s) 链接驱动.'      
+                            errinfo = 'ext 参数错误, 该模式不存在 {} 对应的驱动, 请尝试切换模式或者使用 http(s) 链接驱动.'.format(rpKey)      
                     else:
                         if len(extpocs) > 0:
                             ext += ','.join(extpocs)
