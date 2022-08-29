@@ -47,7 +47,7 @@ fork 本项目 通过 Actions 填写相关参数进行构建。
 ----------|------|----------------|---------
 platform  | √    |"DS918+"        | 选择你需要编译的型号. "DS3615xs", "DS3617xs", "DS918+", "DS920+", "DS3622xs+"  
 version   | √    |"7.1.0-42661"   | 选择你需要编译的版本. "7.1.1-42951", "7.1.0-42661", "7.0.1-42218", "6.2.4-25556"  
-config    | ×    |-               | 更新 user_config.json 参数 [①]  
+config    | ×    |-               | 更新 user_config.json 参数 [①]  参考[#931](https://github.com/wjz304/Redpill_CustomBuild/issues/931)
 map       | ×    |-               | 控制器盘数(SataPortMap)和盘序(DiskIdxMap)两个字段, 并以","间隔. eg: "0, 10"  
 dtb       | ×    |-               | dtb文件下载URL(support ext: .dts,.dtb,.tar.gz,.zip) [#47](https://github.com/wjz304/Redpill_CustomBuild/issues/47)
 sn        | ×    |-               | 序列号. 默认根据型号随机生成. eg: "1980PDN002189" 
