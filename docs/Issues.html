@@ -79,7 +79,7 @@
       function initPlatforms(list) {
         list = list.sort();
         for (var i in list) {
-          var key = list[i].replace("DS", "ds").replace("+", "p");
+          var key = list[i].replace("DS", "ds").replace("DVA", "dva").replace("+", "p");
           platforms[key] = list[i];
         }
       }
@@ -242,7 +242,7 @@
         $("#ext").val(exts.join(","));
       }
       function createExtBtn() {
-        platform = $("#platform").val().replace("DS", "ds").replace("+", "p");
+        platform = $("#platform").val().replace("DS", "ds").replace("DVA", "dva").replace("+", "p");
         version = $("#version").val().split("-").at(-1);
         var exts = [];
         var extsurl =
