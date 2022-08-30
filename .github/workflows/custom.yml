@@ -18,11 +18,14 @@ on:
         default: 'DS3622xs+' 
         type: choice
         options:
-        - DS3615xs
-        - DS3617xs
         - DS918+
         - DS920+
+        - DS1621+
+        - DS3615xs
+        - DS3617xs
         - DS3622xs+
+        - DVA1622
+        - DVA3221
 
       version:
         description: '请选择你需要编译的版本'
@@ -42,7 +45,7 @@ on:
         type: string
 
       dtb:
-        description: '【仅DS920+】请输入 dtb 文件的下载链接. (支持的文件类型: .dts、.dtb、.tar.gz、.zip)'
+        description: '【DS920+, DS1621+, DVA1622】需要 dtb 文件的下载链接.(支持的文件类型: .dts,.dtb,.tar.gz,.zip)'
         required: false
         default: ''
         type: string
@@ -66,7 +69,7 @@ on:
         type: string
 
       ext: 
-        description: '请输入扩展驱动, 多个请以 "," 间隔（请酌情添加，太多起不来）. eg: r8125, tg3'
+        description: '请输入扩展驱动, 多个请以 "," 间隔（请酌情添加, 太多起不来）. eg: r8125, tg3'
         required: false
         default: ''
         type: string
@@ -251,13 +254,15 @@ jobs:
                     jun = '${{ inputs.jun }}'.strip()
                     # dev = '${{ inputs.dev }}'.strip()         # Actions 限制10个参数
 
-                if not platform in ['DS3615xs', 'DS3617xs', 'DS918+', 'DS920+', 'DS3622xs+']:
+                platforms = ['DS918+', 'DS920+', 'DS1621+', 'DS3615xs', 'DS3617xs', 'DS3622xs+', 'DVA1622', 'DVA3221']
+                if not platform in platforms:
                     iscustom = 'false'
-                    errinfo = 'platform 参数错误, 当前仅支持 DS3615xs, DS3617xs, DS918+, DS920+, DS3622xs+ .'
+                    errinfo = 'platform 参数错误, 当前仅支持 {}.'.format(', '.join(platforms))
 
-                if not version in ['7.1.1-42951', '7.1.0-42661', '7.0.1-42218', '6.2.4-25556']:
+                versions = ['7.1.1-42951', '7.1.0-42661', '7.0.1-42218', '6.2.4-25556']
+                if not version in versions:
                     iscustom = 'false'
-                    errinfo = 'version 参数错误, 当前仅支持 7.1.1-42951, 7.1.0-42661, 7.0.1-42218, 6.2.4-25556 .'
+                    errinfo = 'version 参数错误, 当前仅支持 {}.'.format(', '.join(versions))
 
                 if config != '':
                     try:
@@ -458,7 +463,7 @@ jobs:
           issue-number: ${{ env.issuenumber }}
           body: |
             ${{ env.issueauth }} 您好.  
-            您自定义的 Redpill 已开始构建。请前往下面的 URL 查看详细信息。  
+            您自定义的 Redpill 已开始构建. 请前往下面的 URL 查看详细信息.  
             > ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}  
             ----
           emoji: heart
@@ -472,7 +477,7 @@ jobs:
           issue-number: ${{ env.issuenumber }}
           body: |
             ${{ env.issueauth }} 您好.  
-            您自定义 Redpill 所填写的信息有误,无法触发编译, 请参考模板和错误提示对body进行修改并请重新触发编译(Close & Reopen).    
+            您自定义 Redpill 所填写的信息有误, 无法触发编译, 请参考模板和错误提示对body进行修改并请重新触发编译(Close & Reopen).  
             `Error Info:`  
             `${{ steps.info.outputs.errinfo }}`  
             >
@@ -508,7 +513,7 @@ jobs:
                     except ModuleNotFoundError:
                         os.system('pip3 install wget')
                         import wget
-                    res = wget.download('https://raw.githubusercontent.com/pocopico/tinycore-redpill/main/serialnumbergen.sh', out='serialnumbergen.sh')
+                    res = wget.download('https://raw.githubusercontent.com/pocopico/tinycore-redpill/develop/serialnumbergen.sh', out='serialnumbergen.sh')
                     os.system('sed -i "s|DS3622xsp|DS3622xs+|g" serialnumbergen.sh')
                     os.system('sed -i "s|echo.*\$(generateMacAddress)|echo \$(generateMacAddress)|g" serialnumbergen.sh')
                     os.system('sed -i "s|echo.*\$(generateSerial \$1)|echo \$(generateSerial \$1)|g" serialnumbergen.sh')
@@ -565,7 +570,11 @@ jobs:
               path=7.1.1/42951
             fi
             curl -L https://cndl.synology.cn/download/DSM/release/${path}/DSM_$1_$2.pat -o ds.pat
-            curl -L https://cndl.synology.cn/download/DSM/release/7.0.1/42218/DSM_$1_42218.pat -o oldpat.tar.gz
+            if [ "$1" == "DVA1622" ]; then
+              curl -L https://cndl.synology.cn/download/DSM/release/7.0.1/42218/DSM_DS3622xs+_42218.pat -o oldpat.tar.gz
+            else
+              curl -L https://cndl.synology.cn/download/DSM/release/7.0.1/42218/DSM_$1_42218.pat -o oldpat.tar.gz
+            fi
             mkdir synoesp && tar -C./synoesp/ -xf oldpat.tar.gz rd.gz
             cd synoesp
             xz -dc < rd.gz >rd 2>/dev/null || echo "extract rd.gz"
@@ -591,32 +600,26 @@ jobs:
 
           function setsynoarch() {
             case $1 in
-            DS3615xs)
-                synoarch=bromolow
-                ;;
-            DS3617xs)
-                synoarch=broadwell
-                ;;
-            DS916+)
-                synoarch=braswell
-                ;;
             DS918+)
                 synoarch=apollolake
                 ;;
             DS920+)
                 synoarch=geminilake
                 ;;
-            DS3622xs+)
-                synoarch=broadwellnk
-                ;;
             DS1621+)
                 synoarch=v1000
                 ;;
-            FS6400)
-                synoarch=purley
+            DS3615xs)
+                synoarch=bromolow
                 ;;
-            DVA3219)
-                synoarch=denverton
+            DS3617xs)
+                synoarch=broadwell
+                ;;
+            DS3622xs+)
+                synoarch=broadwellnk
+                ;;
+            DVA1622)
+                synoarch=geminilake
                 ;;
             DVA3221)
                 synoarch=denverton
@@ -653,8 +656,8 @@ jobs:
           cd redpill-load
           platform=${{ steps.info.outputs.platform }}
           version=${{ steps.info.outputs.version }}
-          synoplatform=$(echo ${platform} | sed 's/DS/ds/g; s/+/p/g')       # DS3622xs+ => ds3622xsp
-          synoversion=$(echo ${version} | awk -F - '{print $2}')            # 7.0.1-42218 => 42218
+          synoplatform=$(echo ${platform} | sed 's/DS/ds/g; s/DVA/dva/g; s/+/p/g')       # DS3622xs+ => ds3622xsp
+          synoversion=$(echo ${version} | awk -F - '{print $2}')                         # 7.0.1-42218 => 42218
           setsynoarch ${platform}
 
           # 7.1 解密PAT
@@ -672,10 +675,10 @@ jobs:
           # 添加必备驱动
           echo "===========================添加必备驱动=========================="
           echo -e '{\n    "thethorgroup.boot-wait": "https://raw.githubusercontent.com/wjz304/rp-ext/master/redpill-boot-wait/rpext-index.json"\n}' > bundled-exts.json
-          #./ext-manager.sh add ${loadext}/redpill-boot-wait/rpext-index.json
-          ./ext-manager.sh add ${loadext}/redpill-acpid/rpext-index.json
-          ./ext-manager.sh add ${loadext}/redpill-misc/rpext-index.json
-          ./ext-manager.sh add ${loadext}/redpill-virtio/rpext-index.json
+          [ "$(curl -s --location ${loadext}/redpill-boot-wait/rpext-index.json | jq -r .releases.${synoplatform}_${synoversion})" != "null" ] && ./ext-manager.sh add ${loadext}/redpill-boot-wait/rpext-index.json
+          [ "$(curl -s --location ${loadext}/redpill-acpid/rpext-index.json | jq -r .releases.${synoplatform}_${synoversion})" != "null" ] && ./ext-manager.sh add ${loadext}/redpill-acpid/rpext-index.json
+          [ "$(curl -s --location ${loadext}/redpill-misc/rpext-index.json | jq -r .releases.${synoplatform}_${synoversion})" != "null" ] && ./ext-manager.sh add ${loadext}/redpill-misc/rpext-index.json
+          [ "$(curl -s --location ${loadext}/redpill-virtio/rpext-index.json | jq -r .releases.${synoplatform}_${synoversion})" != "null" ] && ./ext-manager.sh add ${loadext}/redpill-virtio/rpext-index.json
 
           # redpill.ko 方式一 
           echo "=======================Download redpill.ko======================"
@@ -699,8 +702,8 @@ jobs:
           # cp -fv ./redpill.ko ../ext/rp-lkm/redpill-linux-v$(modinfo --field=vermagic ./redpill.ko | awk '{print $1}').ko
           # cd ..
 
-          if [ ${platform} == 'DS920+' ]; then
-            echo "===========================DS920+ .dtb=========================="
+          if [ ${platform} == 'DS920+' -o ${platform} == 'DS1621+' -o ${platform} == 'DVA1622' ]; then
+            echo "=======================DS920+/DS1621+ .dtb======================"
             ./ext-manager.sh add ${rpext}/redpill-dtb-static/rpext-index.json
             ./ext-manager.sh _update_platform_exts ${synoplatform}_${synoversion} redpill-dtb-static
 
@@ -783,7 +786,7 @@ jobs:
             echo "### $(echo "$GITHUB_REPOSITORY" | awk -F / '{print $1}')'s Redpill Custom" >> $GITHUB_STEP_SUMMARY
           fi
           echo "😞 😔 😟 😕 🙁 ☹️ 😣 😖 😫 😩 🥺 😢  " >> $GITHUB_STEP_SUMMARY
-          echo "您自定义 Redpill 所填写的信息有误,无法触发编译, 请参考模板和错误提示对body进行修改并请重新触发编译(Close & Reopen).  " >> $GITHUB_STEP_SUMMARY
+          echo "您自定义 Redpill 所填写的信息有误, 无法触发编译, 请参考模板和错误提示对body进行修改并请重新触发编译(Close & Reopen).  " >> $GITHUB_STEP_SUMMARY
           echo "`Error Info:`  " >> $GITHUB_STEP_SUMMARY
           echo "`${{ steps.info.outputs.errinfo }}`  " >> $GITHUB_STEP_SUMMARY
 
@@ -796,7 +799,7 @@ jobs:
           issue-number: ${{ env.issuenumber }}
           body: |
             ${{ env.issueauth }} 您好.
-            您自定义的 Redpill 已构建完成。请前往下面的 URL 下载。
+            您自定义的 Redpill 已构建完成. 请前往下面的 URL 下载.  
             > ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}  
             ----
           emoji: hooray
@@ -818,7 +821,7 @@ jobs:
           issue-number: ${{ env.issuenumber }}
           body: |
             ${{ env.issueauth }} 您好.
-            您自定义的 Redpill 构建失败。请前往下面的 URL 查看详细信息。请自行关闭本 Issues 并在进行调整后重新创建一个 Issues 来发起重新构建。
+            您自定义的 Redpill 构建失败. 请前往下面的 URL 查看详细信息对body进行修改并请重新触发编译(Close & Reopen).  
             > ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}  
             ----
           emoji: confused
