@@ -273,7 +273,7 @@ jobs:
                         map = ','.join(maps)
                     else:
                         iscustom = 'false'
-                        errinfo = 'map 参数错误, DiskIdxMap 的位数应该是 SataPortMap 的2倍, 并以 “,” 间隔.'
+                        errinfo = 'map 参数错误, 请填写控制器盘数(SataPortMap)和盘序(DiskIdxMap)两个字段(DiskIdxMap 的位数应该是 SataPortMap 的2倍), 并以","间隔. 比如: "0,10".'
 
                 if dtb != '':
                     url = dtb
@@ -334,9 +334,12 @@ jobs:
                             else:
                                 iscustom = 'false'
                                 errinfo = 'dtb 参数错误, 该url下载的文件不是所支持的格式.'
-                    except Exception as err:
+                    except ValueError as e:
                         iscustom = 'false'
-                        errinfo = 'dtb 参数错误, 可能是服务器压力过大, 请稍后重试. {} .'.format(err)
+                        errinfo = 'dtb 参数错误, {}, 请填写 dts/dtb 文件有效的 http(s) 下载链接.'.format(e)
+                    except Exception as e:
+                        iscustom = 'false'
+                        errinfo = 'dtb 参数错误, {}, 请稍后重试.'.format(e)
 
                 if sn != '' and not sn.isalnum():
                     iscustom = 'false'
@@ -358,7 +361,7 @@ jobs:
                         usb = ','.join(usbs)
                     else:
                         iscustom = 'false'
-                        errinfo = 'usb 参数错误.'
+                        errinfo = 'usb 参数错误, 请填写设备识别码(pid)和供应商ID(vid)两个字段的值, 并以","间隔. eg: 0xa4a5, 0x0525'
 
                 if ext != '':
                     rpKey = platform.replace('+', 'p').lower() + '_' + version.split('-')[-1]
@@ -469,7 +472,7 @@ jobs:
           issue-number: ${{ env.issuenumber }}
           body: |
             ${{ env.issueauth }} 您好.  
-            您自定义 Redpill 所填写的信息无法解析, 请参考模板并请重新发起定制。  
+            您自定义 Redpill 所填写的信息有误,无法触发编译, 请参考模板和错误提示对body进行修改并请重新触发编译(Close & Reopen).    
             `Error Info:`  
             `${{ steps.info.outputs.errinfo }}`  
             >
@@ -780,7 +783,7 @@ jobs:
             echo "### $(echo "$GITHUB_REPOSITORY" | awk -F / '{print $1}')'s Redpill Custom" >> $GITHUB_STEP_SUMMARY
           fi
           echo "😞 😔 😟 😕 🙁 ☹️ 😣 😖 😫 😩 🥺 😢  " >> $GITHUB_STEP_SUMMARY
-          echo "您自定义 Redpill 所填写的信息无法解析, 请参考模板并请重新发起定制。  " >> $GITHUB_STEP_SUMMARY
+          echo "您自定义 Redpill 所填写的信息有误,无法触发编译, 请参考模板和错误提示对body进行修改并请重新触发编译(Close & Reopen).  " >> $GITHUB_STEP_SUMMARY
           echo "`Error Info:`  " >> $GITHUB_STEP_SUMMARY
           echo "`${{ steps.info.outputs.errinfo }}`  " >> $GITHUB_STEP_SUMMARY
 
