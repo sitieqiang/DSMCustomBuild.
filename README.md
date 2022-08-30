@@ -28,7 +28,7 @@ __感谢 [hoping](https://github.com/htmambo) 大佬制作的 UI界面__
 7. 如果没有魔法，附件下载不下来，请参考 https://github.com/wjz304/hosts 设置hosts。
 8. [必读！！！](./tips.md)
 9. 需要一个群吗？QQ群：[21609194](https://qm.qq.com/cgi-bin/qm/qr?k=8AU8VJ82OR2HB_77g3vsjGKA-rm-p67B&jump_from=webapi)  TG：[https://t.me/Redpill_CustomBuild](https://t.me/Redpill_CustomBuild)  
- `(PS: 如有疑问请私信我吧，在Issues上评论我可能看不到, 邮件太多了, 一天几千封邮件根本看不过来, 只能偶尔看下失败的Issues.)`  
+ `(PS: 如有疑问请私信我吧, 在Issues上评论我可能看不到, 邮件太多了, 一天几千封邮件根本看不过来, 只能偶尔看下失败的Issues.)`  
   
 方式二：   
 fork 本项目 通过 Actions 填写相关参数进行构建。  
