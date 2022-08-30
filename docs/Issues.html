@@ -209,7 +209,7 @@
         });
       }
       function changePlatform() {
-        platform = $("#platform").val().replace("DS", "ds").replace("+", "p");
+        platform = $("#platform").val().replace("DS", "ds").replace("DVA", "dva").replace("+", "p");
         options = releases[platform];
         $("#version").empty();
         $("#version").append($("<option></option>").val("").html("请选择"));
