@@ -1,4 +1,0 @@
-*.md linguist-language=Markdown
-*.yml linguist-language=YAML
-*.html linguist-language=HTML
-*.json linguist-language=JSON
