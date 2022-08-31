@@ -785,7 +785,7 @@ jobs:
             echo "👉 "version": "${{ steps.info.outputs.version }}", "jun": "${{ steps.info.outputs.jun }}"  " >> $GITHUB_STEP_SUMMARY
             echo "👉 "ext": "${{ steps.info.outputs.ext }}"  " >> $GITHUB_STEP_SUMMARY
           fi
-          if [ ${{ steps.info.outputs.warinfo }} != '' ]; then
+          if [ '${{ steps.info.outputs.warinfo }}' != '' ]; then
             echo "  " >> $GITHUB_STEP_SUMMARY
             echo "‼️‼️‼️ Body 中含有自定义的 ${{ steps.info.outputs.warinfo }} 敏感信息, 为防止其他人盗用, 建议附件下载完成后删除日志和附件.  " >> $GITHUB_STEP_SUMMARY
             echo "  " >> $GITHUB_STEP_SUMMARY
@@ -816,7 +816,7 @@ jobs:
           echo "您自定义 Redpill 所填写的信息有误, 无法触发编译, 请参考模板和错误提示对body进行修改并请重新触发编译(Close & Reopen).  " >> $GITHUB_STEP_SUMMARY
           echo "`Error Info:`  " >> $GITHUB_STEP_SUMMARY
           echo "`${{ steps.info.outputs.errinfo }}`  " >> $GITHUB_STEP_SUMMARY
-          if [ ${{ steps.info.outputs.warinfo }} != '' ]; then
+          if [ '${{ steps.info.outputs.warinfo }}' != '' ]; then
             echo "  " >> $GITHUB_STEP_SUMMARY
             echo "‼️‼️‼️ Body 中含有自定义的 ${{ steps.info.outputs.warinfo }} 敏感信息, 为防止其他人盗用, 建议确认错误原因后删除日志和附件.  " >> $GITHUB_STEP_SUMMARY
             echo "  " >> $GITHUB_STEP_SUMMARY
