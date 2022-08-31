@@ -197,6 +197,7 @@ jobs:
                 issues = 'false'
                 iscustom = 'true'
                 errinfo = ''
+                warinfo = ''
 
                 platform = 'DS3622xs+'
                 version = '7.1.0-42661'
@@ -346,11 +347,15 @@ jobs:
                         iscustom = 'false'
                         errinfo = 'dtb 参数错误, {}, 请稍后重试.'.format(e)
 
-                if sn != '' and not sn.isalnum():
-                    iscustom = 'false'
-                    errinfo = 'sn 参数错误.'
+                if sn != '':
+                    warinfo = 'sn'
+                    if not sn.isalnum():
+                        iscustom = 'false'
+                        errinfo = 'sn 参数错误.'
+                        warinfo = 'sn'
 
                 if mac != '':
+                    warinfo = 'mac' if warinfo == '' else 'sn, mac'
                     macs = [x.strip() for x in re.split(',| |\|', mac) if x.strip() != '']
                     if len(macs) > 0 or len(macs) <= 8:
                         mac = ','.join(macs)
@@ -413,6 +418,7 @@ jobs:
                 set_output('issues', issues)
                 set_output('iscustom', iscustom)
                 set_output('errinfo', errinfo)
+                set_output('warinfo', warinfo)
 
                 set_output('platform', platform)
                 set_output('version', version)
@@ -432,6 +438,7 @@ jobs:
           echo issues:    "${{ steps.info.outputs.issues }}"
           echo iscustom:  "${{ steps.info.outputs.iscustom }}"
           echo errinfo:   "${{ steps.info.outputs.errinfo }}"
+          echo warinfo:   "${{ steps.info.outputs.warinfo }}"
           echo platform:  "${{ steps.info.outputs.platform }}"
           echo version:   "${{ steps.info.outputs.version }}"
           echo config:    "${{ steps.info.outputs.config }}"
@@ -483,6 +490,21 @@ jobs:
             >
             ----
           emoji: confused
+
+      - name: Warning Issues comment
+        if: steps.info.outputs.warinfo != ''
+        uses: actions-cool/issues-helper@v3
+        with:
+          actions: 'create-comment'
+          token: ${{ secrets.GITHUB_TOKEN }}
+          issue-number: ${{ env.issuenumber }}
+          body: |
+            ‼️‼️‼️ Body 中含有 ${{ steps.info.outputs.warinfo }} 敏感信息, 为防止其他人盗用, 请参考以下视频删除(不影响本次编译).  
+              
+            https://user-images.githubusercontent.com/5615843/187615519-53a6dcf5-a5e2-4731-8889-9eee8955a977.mp4  
+            >
+            ----
+          emoji: eyes
 
       - name: Create Config File
         if: steps.info.outputs.iscustom == 'true'
