@@ -492,14 +492,15 @@ jobs:
           emoji: confused
 
       - name: Warning Issues comment
-        if: steps.info.outputs.warinfo != ''
+        if: steps.info.outputs.issues == 'true' && steps.info.outputs.warinfo != ''
         uses: actions-cool/issues-helper@v3
         with:
           actions: 'create-comment'
           token: ${{ secrets.GITHUB_TOKEN }}
           issue-number: ${{ env.issuenumber }}
           body: |
-            ‼️‼️‼️ Body 中含有自定义的 ${{ steps.info.outputs.warinfo }} 敏感信息, 为防止其他人盗用, 建议参考以下视频删除敏感信息(不影响本次编译).  
+            ‼️‼️‼️ 
+            `Body 中含有自定义的 ${{ steps.info.outputs.warinfo }} 敏感信息, 为防止其他人盗用, 建议参考以下视频删除敏感信息(不影响本次编译).`  
               
             https://user-images.githubusercontent.com/5615843/187615519-53a6dcf5-a5e2-4731-8889-9eee8955a977.mp4  
             >
@@ -787,9 +788,9 @@ jobs:
           fi
           if [ '${{ steps.info.outputs.warinfo }}' != '' ]; then
             echo "  " >> $GITHUB_STEP_SUMMARY
-            echo "‼️‼️‼️ Body 中含有自定义的 ${{ steps.info.outputs.warinfo }} 敏感信息, 为防止其他人盗用, 建议附件下载完成后删除日志和附件.  " >> $GITHUB_STEP_SUMMARY
-            echo "  " >> $GITHUB_STEP_SUMMARY
-            echo "![!!](https://user-images.githubusercontent.com/5615843/187622659-44df8ac4-0f38-4b7b-9da0-1dd620d96bce.png)  " >> $GITHUB_STEP_SUMMARY
+            echo "‼️‼️‼️  " >> $GITHUB_STEP_SUMMARY
+            echo "`Body 中含有自定义的 ${{ steps.info.outputs.warinfo }} 敏感信息, 为防止其他人盗用, 建议附件下载完成后删除日志和附件.`  " >> $GITHUB_STEP_SUMMARY
+            echo "`在👉Issues下评论 "delete builds" 即可删该Issues的所有历史编译记录.`  " >> $GITHUB_STEP_SUMMARY
           fi
           echo "::set-output name=release_tag::$(date +"%Y.%m.%d-%H%M")"
           echo "::set-output name=repository_name::$(echo "$GITHUB_REPOSITORY" | awk -F / '{print $2}')"
@@ -818,9 +819,9 @@ jobs:
           echo "`${{ steps.info.outputs.errinfo }}`  " >> $GITHUB_STEP_SUMMARY
           if [ '${{ steps.info.outputs.warinfo }}' != '' ]; then
             echo "  " >> $GITHUB_STEP_SUMMARY
-            echo "‼️‼️‼️ Body 中含有自定义的 ${{ steps.info.outputs.warinfo }} 敏感信息, 为防止其他人盗用, 建议确认错误原因后删除日志和附件.  " >> $GITHUB_STEP_SUMMARY
-            echo "  " >> $GITHUB_STEP_SUMMARY
-            echo "![!!](https://user-images.githubusercontent.com/5615843/187622659-44df8ac4-0f38-4b7b-9da0-1dd620d96bce.png)  " >> $GITHUB_STEP_SUMMARY
+            echo "‼️‼️‼️  " >> $GITHUB_STEP_SUMMARY
+            echo "`Body 中含有自定义的 ${{ steps.info.outputs.warinfo }} 敏感信息, 为防止其他人盗用, 建议确认错误原因后删除日志和附件.`  " >> $GITHUB_STEP_SUMMARY
+            echo "`在👉Issues下评论 "delete builds" 即可删👉Issues的所有历史编译记录.`  " >> $GITHUB_STEP_SUMMARY
           fi
 
 
@@ -860,3 +861,16 @@ jobs:
             ----
           emoji: confused
 
+      - name: Warning Download comment
+        if: steps.info.outputs.issues == 'true' && steps.info.outputs.warinfo != ''
+        uses: actions-cool/issues-helper@v3
+        with:
+          actions: 'create-comment'
+          token: ${{ secrets.GITHUB_TOKEN }}
+          issue-number: ${{ env.issuenumber }}
+          body: |
+            echo "  " >> $GITHUB_STEP_SUMMARY
+            echo "‼️‼️‼️  " >> $GITHUB_STEP_SUMMARY
+            echo "`Body 中含有自定义的 ${{ steps.info.outputs.warinfo }} 敏感信息, 为防止其他人盗用, 建议附件下载完成/确认错误原因后删除日志和附件.`  " >> $GITHUB_STEP_SUMMARY
+            echo "`在Issues下评论 "delete builds" 即可删Issues的所有历史编译记录.`  " >> $GITHUB_STEP_SUMMARY
+          emoji: eyes
