@@ -869,8 +869,7 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
           issue-number: ${{ env.issuenumber }}
           body: |
-            echo "  " >> $GITHUB_STEP_SUMMARY
-            echo "‼️‼️‼️  " >> $GITHUB_STEP_SUMMARY
-            echo "`Body 中含有自定义的 ${{ steps.info.outputs.warinfo }} 敏感信息, 为防止其他人盗用, 建议附件下载完成/确认错误原因后删除日志和附件.`  " >> $GITHUB_STEP_SUMMARY
-            echo "`在Issues下评论 "delete builds" 即可删Issues的所有历史编译记录.`  " >> $GITHUB_STEP_SUMMARY
+            ‼️‼️‼️  
+            `Body 中含有自定义的 ${{ steps.info.outputs.warinfo }} 敏感信息, 为防止其他人盗用, 建议附件下载完成/确认错误原因后删除日志和附件.`
+            `在Issues下评论 "delete builds" 即可删Issues的所有历史编译记录.`  
           emoji: eyes
