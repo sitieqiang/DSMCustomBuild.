@@ -268,7 +268,7 @@
           let idx = 1;
           if (exts.length > 0)
             html +=
-              '<span class="pl-mi1">点击驱动名添加/删除(*结尾的为无效驱动, #号结尾的为sha256错误驱动, */# 强制添加均将编译失败.) </span><br />';
+              '<span class="pl-mi1">点击驱动名添加/删除 (* 结尾的为无效驱动, # 结尾的为sha256错误驱动, */# 强制添加均将编译失败.) </span><br />';
           for (var i in exts) {
             if (exts[i].endsWith("*") || exts[i].endsWith("#")) {
               html +=
