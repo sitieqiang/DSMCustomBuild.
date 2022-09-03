@@ -25,120 +25,103 @@ jobs:
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
           git config --global user.name "github-actions[bot]"
           sudo timedatectl set-timezone "Asia/Shanghai"
+          sudo apt install neofetch
+          neofetch
 
-      - name: Checkout pocopico rp-ext
+      - name: Checkout rp-ext s
         run: |
-          sudo rm -rf rp-ext
-          git clone https://github.com/pocopico/rp-ext rp-ext
+          sudo rm -rf rp-ext_pocopico
+          git clone https://github.com/pocopico/rp-ext rp-ext_pocopico
 
-      - name: Get pocopico exts
+          sudo rm -rf rp-ext_wjz304
+          git clone https://github.com/wjz304/rp-ext rp-ext_wjz304
+
+      - name: Get exts lsit
         uses: jannekem/run-python-script-action@v1.2
         with:
           script: |
-            import os, json
+            # -*- coding: utf-8 -*-
 
-            if __name__ == '__main__':
+            import os, json, hashlib
 
+            root = '' # os.path.dirname(os.path.abspath(__file__))
+
+            def getjsonfile(file):
+                data = None
+                if os.path.isfile(file):
+                    try:
+                        with open(file, 'r') as f:
+                            data = json.load(f)
+                    except Exception as err:
+                        print(err)
+                return data
+
+            def sha256sum(file):
+                sha256 = ''
+                if os.path.isfile(file):
+                    with open(file, "rb") as f:
+                        sha256=hashlib.sha256(f.read()).hexdigest()
+                return sha256
+
+            def pathstrsub(exp, reglist=[]):
+                ret = exp
+                for re in reglist:
+                    ret = ret.replace(re[0], re[1])
+                return ret
+
+            def getextslist(work = 'rp-ext', reglist=[]):
+                exts = {}
                 try:
-                    root = '' # os.path.dirname(os.path.abspath(__file__))
-                    work = 'rp-ext'
                     jext = 'rpext-index.json'
-                    exts = {}
-
-                    urlhost1 = 'https://raw.githubusercontent.com/pocopico/rp-ext/master/'
-                    urlhost2 = 'https://github.com/pocopico/rp-ext/raw/main/'
-                    files = os.listdir(os.path.join(root, work))
-                    print(files)
-                    files.sort()
-                    print(files)
-                    for file in files:
-                        if file.startswith('.') or file.startswith('redpill'):
+                    extdirs = os.listdir(os.path.join(root, work))
+                    extdirs.sort()
+                    print(extdirs)
+                    for extdir in extdirs:
+                        if extdir.startswith('.') or extdir.startswith('redpill'):
                             continue
-                        if os.path.isdir(os.path.join(root, work, file)):
-                            if os.path.exists(os.path.join(root, work, file, jext)):
-                                with open(os.path.join(root, work, file, jext), 'r') as f:
-                                    data = json.load(f)
-                                    keys = data["releases"].keys()
-                                    for key in keys:
-                                        suffix = ''
-                                        if not os.path.exists(os.path.join(root, work, data["releases"][key].replace(urlhost1, '').replace(urlhost2, ''))):
-                                            suffix = '*'
-                                        if key in exts.keys():
-                                            exts[key].append(file + suffix)
-                                        else:
-                                            exts[key] = [ file + suffix ]
-
-                    if len(exts) > 0:
-                        print(json.dumps(exts, indent=4))
-                        with open(os.path.join(root, 'exts.json'), 'w', encoding='utf-8') as f:
-                            f.write(json.dumps(exts, indent=4))
+                        if os.path.isdir(os.path.join(root, work, extdir)):
+                            data_index = getjsonfile(os.path.join(root, work, extdir, jext))
+                            if data_index != None:
+                                keys = data_index["releases"].keys()
+                                for key in keys:
+                                    suffix = ''
+                                    data_releases = getjsonfile(os.path.join(root, work, pathstrsub(data_index["releases"][key], reglist)))
+                                    if data_releases != None:
+                                        if "files" in data_releases:
+                                            for file in data_releases["files"]:
+                                                sha256_online = file["sha256"]
+                                                sha256_local = sha256sum(os.path.join(root, work, pathstrsub( file["url"], reglist)))
+                                                if sha256_online != sha256_local:
+                                                    suffix = '#'
+                                                    print('file: {} -- key: {} -- error: {} -- really: {}'.format(pathstrsub(data_index["releases"][key], reglist), pathstrsub(file["url"], reglist), sha256_online, sha256_local))
+                                    else:
+                                        suffix = '*'
+                                        print('file: {} -- may not exists'.format(pathstrsub(data_index["releases"][key], reglist)))
+                                    if key in exts.keys():
+                                        exts[key].append(extdir + suffix)
+                                    else:
+                                        exts[key] = [ extdir + suffix ]
                 except Exception as err:
                     print(err)
-
-      - name: Checkout wjz304 rp-ext
-        run: |
-          sudo rm -rf rp-ext
-          git clone https://github.com/wjz304/rp-ext rp-ext
-
-      - name: Get wjz304 exts
-        uses: jannekem/run-python-script-action@v1.2
-        with:
-          script: |
-            import os, json
+                return exts
 
             if __name__ == '__main__':
+                exts = {}
+                print('####################### pocopico #######################')
+                exts["pocopico"] = getextslist('rp-ext_pocopico', [['https://raw.githubusercontent.com/pocopico/rp-ext/master/',''], ['https://github.com/pocopico/rp-ext/raw/main/',''], ['https://github.com/pocopico/rp-ext/blob/main/','']])
+                print('#######################  wjz304  #######################')
+                exts["wjz304"] = getextslist('rp-ext_wjz304', [['https://raw.githubusercontent.com/wjz304/rp-ext/master/','']])
 
-                try:
-                    root = '' # os.path.dirname(os.path.abspath(__file__))
-                    work = 'rp-ext'
-                    jext = 'rpext-index.json'
-                    exts = {}
-
-                    urlhost1 = 'https://raw.githubusercontent.com/wjz304/rp-ext/master/'
-                    files = os.listdir(os.path.join(root, work))
-                    print(files)
-                    files.sort()
-                    print(files)
-                    for file in files:
-                        if file.startswith('.') or file.startswith('redpill'):
-                            continue
-                        if os.path.isdir(os.path.join(root, work, file)):
-                            if os.path.exists(os.path.join(root, work, file, jext)):
-                                with open(os.path.join(root, work, file, jext), 'r') as f:
-                                    data = json.load(f)
-                                    keys = data["releases"].keys()
-                                    for key in keys:
-                                        suffix = ''
-                                        if not os.path.exists(os.path.join(root, work, data["releases"][key].replace(urlhost1, ''))):
-                                            suffix = '*'
-                                        if key in exts.keys():
-                                            exts[key].append(file + suffix)
-                                        else:
-                                            exts[key] = [ file + suffix ]
-                    if len(exts) > 0:
-                        print(json.dumps(exts, indent=4))
-                        with open(os.path.join(root, 'exts_dev.json'), 'w', encoding='utf-8') as f:
-                            f.write(json.dumps(exts, indent=4))
-
-                except Exception as err:
-                    print(err)
+                if len(exts) > 0:
+                    print('#######################   exts   #######################')
+                    print(json.dumps(exts, indent=4))
+                    with open(os.path.join(root, 'exts.json'), 'w', encoding='utf-8') as f:
+                        f.write(json.dumps(exts, indent=4))
 
       - name: Check and Push
         run: |
-          ischanges=false
-
           if [ -n "$(git status -s | grep exts.json)" ]; then
-            ischanges=true
             git add exts.json
-          fi
-
-          if [ -n "$(git status -s | grep exts_dev.json)" ]; then
-            ischanges=true
-            git add exts_dev.json
-          fi
-
-          if [ ${ischanges} == 'true' ]; then
-            git status -s
             git commit -m "update $(date +%Y-%m-%d" "%H:%M:%S)"
             git push -f
           fi

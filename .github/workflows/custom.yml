@@ -376,14 +376,13 @@ jobs:
                 if ext != '':
                     rpKey = platform.replace('+', 'p').lower() + '_' + version.split('-')[-1]
                     rpExts = []
-                    if dev == '1':
-                        extsfile = 'exts_dev.json'
-                    else:
-                        extsfile = 'exts.json'
-                    with open(extsfile, mode="r") as f:
+                    with open('exts.json', mode="r") as f:
                         extsjson = json.loads(f.read())
-                        if rpKey in extsjson:
-                            rpExts = extsjson[rpKey]
+                        extskey = 'pocopico'
+                        if dev == '1':
+                            extskey = 'wjz304'
+                        if extskey in extsjson and rpKey in extsjson[extskey]:
+                            rpExts = extsjson[extskey][rpKey]
                     extpocs = [x.strip() for x in re.split(',| |\|', ext) if x.strip() != '' and not x.strip().startswith('http')]
                     ext3rds = [x.strip() for x in re.split(',| |\|', ext) if x.strip() != '' and x.strip().startswith('http')]
                     ext = ''

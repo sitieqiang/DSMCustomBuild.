@@ -79,7 +79,10 @@
       function initPlatforms(list) {
         list = list.sort();
         for (var i in list) {
-          var key = list[i].replace("DS", "ds").replace("DVA", "dva").replace("+", "p");
+          var key = list[i]
+            .replace("DS", "ds")
+            .replace("DVA", "dva")
+            .replace("+", "p");
           platforms[key] = list[i];
         }
       }
@@ -126,7 +129,7 @@
               html += createInput(
                 "config",
                 "config",
-                '直接更新到 user_config.json, 无特殊需求请勿填写. 请详细阅读说明.',
+                "直接更新到 user_config.json, 无特殊需求请勿填写. 请详细阅读说明.",
                 false,
                 "",
                 false
@@ -209,7 +212,11 @@
         });
       }
       function changePlatform() {
-        platform = $("#platform").val().replace("DS", "ds").replace("DVA", "dva").replace("+", "p");
+        platform = $("#platform")
+          .val()
+          .replace("DS", "ds")
+          .replace("DVA", "dva")
+          .replace("+", "p");
         options = releases[platform];
         $("#version").empty();
         $("#version").append($("<option></option>").val("").html("请选择"));
@@ -242,25 +249,30 @@
         $("#ext").val(exts.join(","));
       }
       function createExtBtn() {
-        platform = $("#platform").val().replace("DS", "ds").replace("DVA", "dva").replace("+", "p");
+        platform = $("#platform")
+          .val()
+          .replace("DS", "ds")
+          .replace("DVA", "dva")
+          .replace("+", "p");
         version = $("#version").val().split("-").at(-1);
         var exts = [];
         var extsurl =
           "https://cdn.jsdelivr.net/gh/wjz304/Redpill_CustomBuild@main/exts.json";
-        if (dev == "1")
-          extsurl =
-            "https://cdn.jsdelivr.net/gh/wjz304/Redpill_CustomBuild@main/exts_dev.json";
-
         httpGetAsync(extsurl, function (result) {
           result = JSON.parse(result);
-          exts = result[platform + "_" + version];
+          extskey = "pocopico";
+          if (dev == "1") extskey = "wjz304";
+          exts = result[extskey][platform + "_" + version];
           var html = "";
           let idx = 1;
+          if (exts.length > 0)
+          html +=
+          '<span class="pl-mi1">点击驱动名添加/删除(*结尾的为无效驱动, #号结尾的为sha256错误驱动, */# 强制添加均将编译失败.) </span><br />'
           for (var i in exts) {
-            if (exts[i].endsWith("*")) {
+            if (exts[i].endsWith("*") || exts[i].endsWith("#")) {
               html +=
                 '<button type="button" class="btn btn-primary btn-sm mt-2" id="ext_btn_' +
-                exts[i].replace(/\./g, "·").replace(/\*/g, "") +
+                exts[i].replace(/\./g, "·").replace(/[\*|\#]/g, "") +
                 '" disabled="true" autofocus="" >' +
                 exts[i] +
                 "</button>&nbsp;";
