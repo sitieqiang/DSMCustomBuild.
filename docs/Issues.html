@@ -50,7 +50,7 @@
       }
     </style>
     <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/gh/jeremyfa/yaml.js@develop/dist/yaml.min.js"></script>
+    <script src="https://fastly.jsdelivr.net/gh/jeremyfa/yaml.js@develop/dist/yaml.min.js"></script>
 
     <script type="application/javascript">
       var platforms = {}; //支持的机型列表
@@ -111,7 +111,7 @@
           $($("#logoD"))[0].style.display = "block";
         }
         httpGetAsync(
-          "https://cdn.jsdelivr.net/gh/wjz304/Redpill_CustomBuild@main/.github/workflows/custom.yml",
+          "https://fastly.jsdelivr.net/gh/wjz304/Redpill_CustomBuild@main/.github/workflows/custom.yml",
           function (result) {
             yaml = YAML.parse(result);
             if (yaml.hasOwnProperty("on")) {
@@ -178,10 +178,10 @@
       function createOtherRule() {
         //这里是支持的机型和系统版本的对应关系
         var extsurl =
-          "https://cdn.jsdelivr.net/gh/pocopico/rp-ext@main/redpill/rpext-index.json";
+          "https://fastly.jsdelivr.net/gh/pocopico/rp-ext@main/redpill/rpext-index.json";
         if (dev == "1")
           extsurl =
-            "https://cdn.jsdelivr.net/gh/wjz304/rp-ext@main/redpill/rpext-index.json";
+            "https://fastly.jsdelivr.net/gh/wjz304/rp-ext@main/redpill/rpext-index.json";
         httpGetAsync(extsurl, function (result) {
           result = JSON.parse(result);
           if (result.hasOwnProperty("releases")) {
@@ -257,7 +257,7 @@
         version = $("#version").val().split("-").at(-1);
         var exts = [];
         var extsurl =
-          "https://cdn.jsdelivr.net/gh/wjz304/Redpill_CustomBuild@main/exts.json";
+          "https://fastly.jsdelivr.net/gh/wjz304/Redpill_CustomBuild@main/exts.json";
         httpGetAsync(extsurl, function (result) {
           result = JSON.parse(result);
           extskey = "pocopico";
@@ -499,10 +499,10 @@
         id="content"
         class="highlight highlight-source-diff notranslate position-relative overflow-auto"
       ></div>
-      <!-- <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script> -->
+      <!-- <script src="https://fastly.jsdelivr.net/npm/marked/marked.min.js"></script> -->
       <script>
         httpGetAsync(
-          "https://cdn.jsdelivr.net/gh/wjz304/Redpill_CustomBuild@main/tips.md",
+          "https://fastly.jsdelivr.net/gh/wjz304/Redpill_CustomBuild@main/tips.md",
           function (result) {
             // var html = marked.parse(result).replace('<pre>', "<pre>\n");
             // 引入的文件就是一段md格式的代码，这里就直接解析一下算了
