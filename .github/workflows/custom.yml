@@ -792,7 +792,7 @@ jobs:
             echo "👉 "version": "${{ steps.info.outputs.version }}", "jun": "${{ steps.info.outputs.jun }}"  " >> $GITHUB_STEP_SUMMARY
             echo "👉 "ext": "${{ steps.info.outputs.ext }}"  " >> $GITHUB_STEP_SUMMARY
             echo "👉 ----  " >> $GITHUB_STEP_SUMMARY
-            echo "👉 PS: 在Issues下评论 "transfer" 附件转快传 🚲->🏍. (只有魔法能够打败魔法).  " >> $GITHUB_STEP_SUMMARY
+            echo "👉 PS: 在Issues下评论 "transfer" 附件转快传 🚲->🏍. `(请勿重复发, 操作时间 ≈ 成功个数 X 3分钟)`.  " >> $GITHUB_STEP_SUMMARY
           fi
           if [ '${{ steps.info.outputs.warinfo }}' != '' ]; then
             echo "  " >> $GITHUB_STEP_SUMMARY
@@ -845,7 +845,7 @@ jobs:
             您自定义的 Redpill 已构建完成. 请前往下面的 URL 下载.  
             > ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}  
             ----  
-            PS: 在Issues下评论 "transfer" 附件转快传 🚲->🏍. (只有魔法能够打败魔法).  
+            PS: 在Issues下评论 "transfer" 附件转快传 🚲->🏍. (请勿重复发, 操作时间 ≈ 成功个数 X 3分钟).  
             >  
             ----  
           emoji: hooray
