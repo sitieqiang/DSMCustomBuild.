@@ -782,7 +782,7 @@ jobs:
               if [[ ${item} = -* ]]; then
                 extname=$(ls ./custom/extensions | grep "${item:1}")
                 if [ -n "${extname}" ]; then
-                  ./ext-manager.sh remove "${extname})"
+                  ./ext-manager.sh remove "${extname}"
                 else
                   echo "默认就没有 ${item:1}"
                 fi
