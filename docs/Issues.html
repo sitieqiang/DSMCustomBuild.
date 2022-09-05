@@ -266,27 +266,26 @@
             exts = result[extskey][platform + "_" + version];
           var html = "";
           let idx = 1;
-          if (exts.length > 0)
+          if (exts.length > 0) {
             html +=
               '<span class="pl-mi1">点击驱动名添加/删除 (* 结尾的为无效驱动, # 结尾的为sha256错误驱动, */# 强制添加均将编译失败.) </span><br />';
+            html +=
+              '<button type="button" class="btn btn-primary btn-sm mt-2" id="ext_btn_-virtio" onclick="return processext(\'-virtio\')" autofocus="" >-virtio</button>&nbsp;';
+            html +=
+              '<button type="button" class="btn btn-primary btn-sm mt-2" id="ext_btn_-acpid2" onclick="return processext(\'-acpid2\')" autofocus="" >-acpid2</button>&nbsp;';
+            html +=
+              '<button type="button" class="btn btn-primary btn-sm mt-2" id="ext_btn_-misc" onclick="return processext(\'-misc\')" autofocus="" >-misc</button>&nbsp;';
+            html +=
+              '<button type="button" class="btn btn-primary btn-sm mt-2" id="ext_btn_-boot-wait" disabled="true" onclick="return processext(\'-boot-wait\')" autofocus="" >-boot-wait</button>&nbsp;';
+            html +=
+              '<span class="pl-md">(注意: boot-wait, misc, acpid2, virtio 默认会进行判断添加, 此处以"-" 开头代表删除, 无特殊需求, 不要点!!!.)</span><br />';
+          }
           for (var i in exts) {
-            if (exts[i].endsWith("*") || exts[i].endsWith("#")) {
-              html +=
-                '<button type="button" class="btn btn-primary btn-sm mt-2" id="ext_btn_' +
-                exts[i].replace(/\./g, "·").replace(/[\*|\#]/g, "") +
-                '" disabled="true" autofocus="" >' +
-                exts[i] +
-                "</button>&nbsp;";
-            } else {
-              html +=
-                '<button type="button" class="btn btn-primary btn-sm mt-2" id="ext_btn_' +
-                exts[i].replace(/\./g, "·") +
-                '" onclick="return processext(\'' +
-                exts[i] +
-                '\')" autofocus="" >' +
-                exts[i] +
-                "</button>&nbsp;";
-            }
+            var par = "";
+            if (exts[i].endsWith("*") || exts[i].endsWith("#"))
+              par = 'disabled="false"';
+
+            html += `<button type="button" class="btn btn-primary btn-sm mt-2" id="ext_btn_${exts[i].replace(/\./g, "·").replace(/[\*|\#]/g,"")}" ${par} onclick="return processext('${exts[i]}')" autofocus="" >${exts[i]}</button>&nbsp;`;
             if (idx++ % 15 == 0) html += "<br />";
           }
           $("#ext").prop("readonly", true);
@@ -300,57 +299,26 @@
         createExtBtn();
       }
       function createInput(title, name, desc, opts, dft, req) {
-        var html = '<div class="form-group mt-1 mb-2 ';
-        if (req) html += "required";
-        html +=
-          '"><div class="form-group-header"><label class="color-fg-default text-mono f6" for="' +
-          name +
-          '">' +
-          title +
-          '</label></div><div class="form-group-body">';
-        html +=
-          '<input class="form-control input-contrast input-sm" type="text" id="' +
-          name +
-          '" name="inputs[' +
-          name +
-          ']" value="' +
-          dft +
-          '" />';
-        html += "使用说明：" + desc;
-        html += "</div></div>";
+        var par = "";
+        if (req)
+          par = '"required"';
+        html = `<div class="form-group mt-1 mb-2 ${par} "><div class="form-group-header"><label class="color-fg-default text-mono f6" for="${name}">${title}</label></div><div class="form-group-body">`;
+        html += `<input class="form-control input-contrast input-sm" type="text" id="${name}" name="inputs[${name}]" value="${dft}" />使用说明：${desc}</div></div>`;
         return html;
       }
 
       function createSelect(title, name, desc, opts, dft, req) {
-        var html = '<div class="form-group mt-1 mb-2 ';
-        if (req) html += "required";
-        html +=
-          '"><div class="form-group-header"><label class="color-fg-default text-mono f6" for="' +
-          name +
-          '">' +
-          title +
-          '</label></div><div class="form-group-body">';
-        html +=
-          '<select class="form-select form-control select-sm input-contrast" id="' +
-          name +
-          '" required=""';
-        html += 'name="inputs[' + name + ']"value="' + dft + '">';
-        // html += '<option value="">请选择</option>'
+        var par = "";
+        if (req)
+          par = '"required"';
+        html = `<div class="form-group mt-1 mb-2 ${par}"><div class="form-group-header"><label class="color-fg-default text-mono f6" for="${name}">${title}</label></div><div class="form-group-body">`;
+        html += `<select class="form-select form-control select-sm input-contrast" id="${name}" required="" name="inputs[${name}]" value="'${dft}'">`;
         for (var v in opts) {
           var addpar = "";
-          if (opts[v] == dft) addpar = ' selected="selected"';
-          html +=
-            "<option" +
-            addpar +
-            ' value="' +
-            opts[v] +
-            '">' +
-            opts[v] +
-            "</option>";
+          if (opts[v] == dft) addpar = 'selected="selected"';
+          html += `<option ${addpar} value="${opts[v]}">${opts[v]}</option>`;
         }
-        html += "</select>";
-        html += "使用说明：" + desc;
-        html += "</div></div>";
+        html += `</select>使用说明：${desc}</div></div>`;
         return html;
       }
 
