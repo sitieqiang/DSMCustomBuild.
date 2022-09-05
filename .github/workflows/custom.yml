@@ -383,25 +383,53 @@ jobs:
                             extskey = 'wjz304'
                         if extskey in extsjson and rpKey in extsjson[extskey]:
                             rpExts = extsjson[extskey][rpKey]
-                    extpocs = [x.strip() for x in re.split(',| |\|', ext) if x.strip() != '' and not x.strip().startswith('http')]
+                    extdels = [x.strip() for x in re.split(',| |\|', ext) if x.strip() != '' and x.strip().startswith('-')]
                     ext3rds = [x.strip() for x in re.split(',| |\|', ext) if x.strip() != '' and x.strip().startswith('http')]
+                    extpocs = [x.strip() for x in re.split(',| |\|', ext) if x.strip() != '' and not x.strip().startswith('-') and not x.strip().startswith('http')]
                     ext = ''
-                    if len(extpocs) > 0 and not set(extpocs) <= set(rpExts):
-                        iscustom = 'false'
-                        if len(rpExts) > 0:
-                            errinfo = 'ext 参数错误, 请填写[exts.json](https://github.com/wjz304/Redpill_CustomBuild/blob/main/exts.json)中存在的名称(no *).'
-                        else:
-                            errinfo = 'ext 参数错误, 该模式不存在 {} 对应的驱动, 请尝试切换模式或者使用 http(s) 链接驱动.'.format(rpKey)      
-                    else:
+                    while True:
+                        if len(extdels) > 0:
+                            rpDels = ['-boot-wait', '-acpid2', '-misc', '-virtio']
+                            extc = [x for x in extdels if x not in rpDels]
+                            if len(extc) > 0:
+                                iscustom = 'false'
+                                errinfo = 'ext 参数错误, "{}" 无效, 删除必备驱动当前仅支持 "{}".'.format(extc, ','.join(rpDels))
+                                break
+                            if ext != '':
+                                ext += ','
+                            ext += ','.join(extdels)
                         if len(extpocs) > 0:
+                            if len(rpExts) < 0:
+                                iscustom = 'false'
+                                errinfo = 'ext 参数错误, 该模式不存在 "{}" 对应的驱动, 请尝试切换模式或者使用 http(s) 链接驱动.'.format(rpKey)      
+                                break
+                            extc = [x for x in list(set(extpocs) - set(rpExts)) if type(x) == str]
+                            if len(extc) > 0:
+                                iscustom = 'false'
+                                errinfo = 'ext 参数错误, "{}" 不在 exts.json 中, 请填写 exts.json 中存在的名称(no */#).'.format(','.join(extc))       
+                                break
+                            extc = [x for x in extpocs if x.endswith('*') or x.endswith('#')]
+                            if len(extc) > 0:
+                                iscustom = 'false'
+                                errinfo = 'ext 参数错误, "{}" 无效. (* 结尾的为无效驱动, # 结尾的为sha256错误驱动.).'.format(','.join(extc))
+                                break
+                            if ext != '':
+                                ext += ','
                             ext += ','.join(extpocs)
                         if len(ext3rds) > 0:
+                            extc = [x for x in ext3rds if not x.endswith('.json')]
+                            if len(extc) > 0:
+                                iscustom = 'false'
+                                errinfo = 'ext 参数错误, "{}" 无效. (* 结尾的为无效驱动, # 结尾的为sha256错误驱动.).'.format(','.join(extc))
+                                break
                             if ext != '':
                                 ext += ','
                             ext += ','.join(ext3rds)
+
                         if ext == '':
                             iscustom = 'false'
-                            errinfo = 'ext 参数错误. 请填写有效的 http(s) 链接.'
+                            errinfo = 'ext 参数错误. 无效的name, 无效的链接.'
+                        break
 
                 if not exp in ['pocopico', 'jumkey']:
                     iscustom = 'false'
@@ -751,7 +779,14 @@ jobs:
             exts=(${ext//,/ })
             for item in ${exts[@]}
             do
-              if [[ ${item} = http* ]]; then
+              if [[ ${item} = -* ]]; then
+                extname=$(ls ./custom/extensions | grep "${item:1}")
+                if [ -n "${extname}" ]; then
+                  ./ext-manager.sh remove "${extname})"
+                else
+                  echo "默认就没有 ${item:1}"
+                fi
+              elif [[ ${item} = http* ]]; then
                 ./ext-manager.sh add "${item}"
               else
                 ./ext-manager.sh add "${rpext}/${item}/rpext-index.json"
