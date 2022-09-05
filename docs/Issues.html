@@ -296,6 +296,32 @@
         });
       }
       function changeversion() {
+        if ($("#version").val().split("-").at(-1) != "") {
+          // jumkey 当前不支持7.0.1 以上
+          if ($("#version").val().split("-").at(-1) > "42218") {
+            for (var i in  $("#exp")[0].options) {
+              if ($("#exp")[0].options[i].value == "pocopico") $("#exp")[0].options[i].selected = true;
+              if ($("#exp")[0].options[i].value == "jumkey") $("#exp")[0].options[i].style.display = "none";
+            }
+          } else {
+            for (var i in  $("#exp")[0].options) {
+              if ($("#exp")[0].options[i].value == "pocopico") $("#exp")[0].options[i].selected = true;
+              if ($("#exp")[0].options[i].value == "jumkey") $("#exp")[0].options[i].style.display = "block";
+            }
+          }
+          // jun 当前仅支持7.0.1
+          if ($("#version").val().split("-").at(-1) == "42218") {
+            for (var i in  $("#jun")[0].options) {
+              if ($("#jun")[0].options[i].value == "1") $("#jun")[0].options[i].selected = true;
+              if ($("#jun")[0].options[i].value == "1") $("#jun")[0].options[i].style.display = "block";
+            }
+          } else {
+            for (var i in  $("#jun")[0].options) {
+              if ($("#jun")[0].options[i].value == "0") $("#jun")[0].options[i].selected = true;
+              if ($("#jun")[0].options[i].value == "1") $("#jun")[0].options[i].style.display = "none";
+            }
+          }
+        }
         createExtBtn();
       }
       function createInput(title, name, desc, opts, dft, req) {
