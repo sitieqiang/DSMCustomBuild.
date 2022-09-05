@@ -693,7 +693,7 @@ jobs:
             fi
           fi
           rpext=https://raw.githubusercontent.com/pocopico/rp-ext/master
-          loadext=https://raw.githubusercontent.com/pocopico/redpill-load/develop
+          loadext=https://raw.githubusercontent.com/${repo}/redpill-load/${branch}
           if [ ${{ steps.info.outputs.dev }} == '1' ]; then 
             rpext=https://raw.githubusercontent.com/wjz304/rp-ext/master
             loadext=https://raw.githubusercontent.com/wjz304/rp-ext/master
@@ -760,7 +760,7 @@ jobs:
           # cd ..
 
           if [ ${platform} == 'DS920+' -o ${platform} == 'DS1621+' -o ${platform} == 'DVA1622' ]; then
-            echo "=======================DS920+/DS1621+ .dtb======================"
+            echo "==================DS920+/DS1621+/DVA1622 .dtb==================="
             ./ext-manager.sh add ${rpext}/redpill-dtb-static/rpext-index.json
             ./ext-manager.sh _update_platform_exts ${synoplatform}_${synoversion} redpill-dtb-static
 
