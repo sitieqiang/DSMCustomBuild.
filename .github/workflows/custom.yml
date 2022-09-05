@@ -275,7 +275,8 @@ jobs:
 
                 if map != '':
                     maps = [x.strip() for x in re.split(',| |\|', map) if x.strip() != '']
-                    if len(maps) == 2 and maps[0].isdigit() and all(c in string.hexdigits for c in maps[1]) and len(maps[1]) == 2 * len(maps[0]):
+                    # if len(maps) == 2 and maps[0].isdigit() and all(c in string.hexdigits for c in maps[1]) and len(maps[1]) == 2 * len(maps[0]):
+                    if len(maps) == 2 and maps[0].isdigit() and all(c in string.hexdigits for c in maps[1]) and len(maps[1]) >= len(maps[0]):
                         map = ','.join(maps)
                     else:
                         iscustom = 'false'
