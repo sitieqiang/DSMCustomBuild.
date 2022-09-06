@@ -256,16 +256,16 @@ jobs:
                     # dev = '${{ inputs.dev }}'.strip()         # Actions 限制10个参数
 
                 platforms = ['DS918+', 'DS920+', 'DS1621+', 'DS3615xs', 'DS3617xs', 'DS3622xs+', 'DVA1622', 'DVA3221']
-                if not platform in platforms:
+                if iscustom == 'true' and not platform in platforms:
                     iscustom = 'false'
                     errinfo = 'platform 参数错误, 当前仅支持 {}.'.format(', '.join(platforms))
 
                 versions = ['7.1.1-42951', '7.1.0-42661', '7.0.1-42218', '6.2.4-25556']
-                if not version in versions:
+                if iscustom == 'true' and not version in versions:
                     iscustom = 'false'
                     errinfo = 'version 参数错误, 当前仅支持 {}.'.format(', '.join(versions))
 
-                if config != '':
+                if iscustom == 'true' and config != '':
                     try:
                         config = json.dumps(config)
                         json.loads(config)
@@ -273,7 +273,7 @@ jobs:
                         iscustom = 'false'
                         errinfo = 'config 参数错误, 不符合JSON规范 {}.'.format(e)
 
-                if map != '':
+                if iscustom == 'true' and map != '':
                     maps = [x.strip() for x in re.split(',| |\|', map) if x.strip() != '']
                     # if len(maps) == 2 and maps[0].isdigit() and all(c in string.hexdigits for c in maps[1]) and len(maps[1]) == 2 * len(maps[0]):
                     if len(maps) == 2 and maps[0].isdigit() and all(c in string.hexdigits for c in maps[1]) and len(maps[1]) >= len(maps[0]):
@@ -282,7 +282,7 @@ jobs:
                         iscustom = 'false'
                         errinfo = 'map 参数错误, 请填写控制器盘数(SataPortMap)和盘序(DiskIdxMap)两个字段(DiskIdxMap 的位数应该是 SataPortMap 的2倍), 并以","间隔. 比如: "0,10".'
 
-                if dtb != '':
+                if iscustom == 'true' and dtb != '':
                     url = dtb
                     try:
                         try:
@@ -348,14 +348,14 @@ jobs:
                         iscustom = 'false'
                         errinfo = 'dtb 参数错误, {}, 请稍后重试.'.format(e)
 
-                if sn != '':
+                if iscustom == 'true' and sn != '':
                     warinfo = 'sn'
                     if not sn.isalnum():
                         iscustom = 'false'
                         errinfo = 'sn 参数错误.'
                         warinfo = 'sn'
 
-                if mac != '':
+                if iscustom == 'true' and mac != '':
                     warinfo = 'mac' if warinfo == '' else 'sn, mac'
                     macs = [x.strip() for x in re.split(',| |\|', mac) if x.strip() != '']
                     if len(macs) > 0 or len(macs) <= 8:
@@ -364,7 +364,7 @@ jobs:
                         iscustom = 'false'
                         errinfo = 'mac 参数错误.'
 
-                if usb != '':
+                if iscustom == 'true' and usb != '':
                     usbs = [x.strip() for x in re.split(',| |\|', usb) if x.strip() != '']
                     if len(usbs) == 2 \
                     and len(usbs[0]) == 6 and usbs[0].lower().startswith('0x') and all(c in string.hexdigits for c in usbs[0][2:]) \
@@ -374,7 +374,7 @@ jobs:
                         iscustom = 'false'
                         errinfo = 'usb 参数错误, 请填写设备识别码(pid)和供应商ID(vid)两个字段的值, 并以","间隔. eg: 0xa4a5, 0x0525'
 
-                if ext != '':
+                if iscustom == 'true' and ext != '':
                     rpKey = platform.replace('+', 'p').lower() + '_' + version.split('-')[-1]
                     rpExts = []
                     with open('exts.json', mode="r") as f:
@@ -432,15 +432,15 @@ jobs:
                             errinfo = 'ext 参数错误. 无效的name, 无效的链接.'
                         break
 
-                if not exp in ['pocopico', 'jumkey']:
+                if iscustom == 'true' and not exp in ['pocopico', 'jumkey']:
                     iscustom = 'false'
                     errinfo = 'exp 参数错误, 当前仅支持 pocopico, jumkey.'
 
-                if not jun in ['0', '1']:
+                if iscustom == 'true' and not jun in ['0', '1']:
                     iscustom = 'false'
                     errinfo = 'jun 参数错误, 当前仅支持 "0", "1".'
 
-                if not dev in ['0', '1']:
+                if iscustom == 'true' and not dev in ['0', '1']:
                     dev = '0'
 
                 set_output('issues', issues)
