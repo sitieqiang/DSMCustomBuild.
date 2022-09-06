@@ -122,15 +122,16 @@ jobs:
         uses: actions/github-script@v6
         with:
           script: |
+            var fs = require('fs'); // 引入fs模块
             var issuenumber = ${{ toJSON(github.event.issue.number) }};
             var issueauth = ${{ toJSON(github.event.issue.user.login) }};
             var issuetitle = ${{ toJSON(github.event.issue.title) }};
             var issuebody = ${{ toJSON(github.event.issue.body) }};
+            fs.writeFileSync(`body#${issuenumber}.txt`, issuebody.replace(/\r/g, ""), { 'flag': 'w' }, (err) => { if (err) throw err; });
 
             var regex = /\`\`\`([\s\S]*?)\`\`\`/g;
             let options = issuebody.match(regex);
             if (options != null && options.length > 0) {
-              var fs = require('fs'); // 引入fs模块
               fs.writeFileSync('customshell.sh', options[options.length-1].replace(/\`|\r/g, ""), { 'flag': 'w' }, (err) => { if (err) throw err; });
               for(option in options) {
                 console.log(options[option]);
@@ -478,7 +479,7 @@ jobs:
           echo ext:       "${{ steps.info.outputs.ext }}"
           echo exp:       "${{ steps.info.outputs.exp }}"
           echo jun:       "${{ steps.info.outputs.jun }}"
-          echo dev:        "${{ steps.info.outputs.dev }}"
+          echo dev:       "${{ steps.info.outputs.dev }}"
 
       - name: Add Issues labels
         if: steps.info.outputs.issues == 'true' && steps.info.outputs.iscustom == 'true'
@@ -839,6 +840,13 @@ jobs:
           echo "::set-output name=release_tag::$(date +"%Y.%m.%d-%H%M")"
           echo "::set-output name=repository_name::$(echo "$GITHUB_REPOSITORY" | awk -F / '{print $2}')"
 
+          if [ -f 'body#${{ env.issuenumber }}.txt' ]; then
+            cp body#${{ env.issuenumber }}.txt redpill-load/body#${{ env.issuenumber }}.txt
+            echo -e "\n\n${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}" >> redpill-load/body#${{ env.issuenumber }}.txt
+          else
+            echo -e "${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}" >> redpill-load/body#actions.txt
+          fi
+
       - name: Upload to Artifacts
         if: steps.info.outputs.iscustom == 'true' && success()
         uses: actions/upload-artifact@v3
@@ -846,6 +854,7 @@ jobs:
           name: ${{ steps.tag.outputs.repository_name }}-Custom-${{ steps.tag.outputs.release_tag }}
           path: |
             redpill-load/exts.txt
+            redpill-load/body*.txt
             redpill-load/user_config.json
             redpill-load/images/*.img
 
