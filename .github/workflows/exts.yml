@@ -125,3 +125,66 @@ jobs:
             git commit -m "update $(date +%Y-%m-%d" "%H:%M:%S)"
             git push -f
           fi
+
+      - name: Checkout redpill-load s
+        run: |
+          sudo rm -rf redpill-load_pocopico_develop
+          git clone --branch develop https://github.com/pocopico/redpill-load.git redpill-load_pocopico_develop
+
+          sudo rm -rf redpill-load_pocopico_jun
+          git clone --branch jun https://github.com/pocopico/redpill-load.git redpill-load_pocopico_jun
+
+          sudo rm -rf redpill-load_jumkey_develop
+          git clone --branch develop https://github.com/jumkey/redpill-load.git redpill-load_jumkey_develop
+
+      - name: Get loads lsit
+        uses: jannekem/run-python-script-action@v1.2
+        with:
+          script: |
+            # -*- coding: utf-8 -*-
+            import os, json
+
+            root = '' # os.path.dirname(os.path.abspath(__file__))
+
+            def getloadlist(work = 'redpill-load'):
+                load = {}
+                try:
+                    platforms = os.listdir(os.path.join(root, work, 'config'))
+                    platforms.sort()
+                    print(platforms)
+                    for platform in platforms:
+                        if platform.startswith('.') or platform.startswith('_'):
+                            continue
+                        load[platform] = []
+                        if os.path.isdir(os.path.join(root, work, 'config', platform)):
+                            versions = os.listdir(os.path.join(root, work, 'config', platform))
+                            versions.sort()
+                            print(versions)
+                            for version in versions:
+                                if os.path.exists(os.path.join(root, work, 'config', platform, version, 'config.json')):
+                                    load[platform].append(version)
+                except Exception as err:
+                    print(err)
+                return load
+
+            if __name__ == '__main__':
+                loads = {}
+                print('################### pocopico develop ###################')
+                loads["pocopico_develop"] = getloadlist('redpill-load_pocopico_develop')
+                print('##################### pocopico jun #####################')
+                loads["pocopico_jun"] = getloadlist('redpill-load_pocopico_jun')
+                print('#################### jumkey develop ####################')
+                loads["jumkey_develop"] = getloadlist('redpill-load_jumkey_develop')
+                if len(loads) > 0:
+                    print('#######################  loads   #######################')
+                    print(json.dumps(loads, indent=4))
+                    with open(os.path.join(root, 'loads.json'), 'w', encoding='utf-8') as f:
+                        f.write(json.dumps(loads, indent=4))
+
+      - name: Check and Push
+        run: |
+          if [ -n "$(git status -s | grep loads.json)" ]; then
+            git add loads.json
+            git commit -m "update $(date +%Y-%m-%d" "%H:%M:%S)"
+            git push -f
+          fi
