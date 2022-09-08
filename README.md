@@ -1,5 +1,5 @@
 # Redpill_CustomBuild
- [![](https://img.shields.io/github/issues-search?label=%E5%AE%9A%E5%88%B6%E6%AC%A1%E6%95%B0&query=repo%3Awjz304%2FRedpill_CustomBuild%20label%3Acustom)](https://github.com/wjz304/Redpill_CustomBuild/issues?q=label%3Acustom)
+[![](https://img.shields.io/github/issues-search?label=%E5%AE%9A%E5%88%B6%E6%AC%A1%E6%95%B0&query=repo%3Awjz304%2FRedpill_CustomBuild%20label%3Acustom)](https://github.com/wjz304/Redpill_CustomBuild/issues?q=label%3Acustom)
 [![](https://img.shields.io/github/issues-search?label=%E6%AF%8F%E6%97%A5%E6%9E%84%E5%BB%BA&query=repo%3Awjz304%2FRedpill_CustomBuild%20label%3Aschedule)](https://github.com/wjz304/Redpill_CustomBuild/issues?q=label%3Aschedule)  
 
 ## 介绍  
@@ -109,7 +109,7 @@ jun       | ×    |"0"             | 仅7.0.1-42218 版本可以选择jun模式�
 </details>  
 </br>
 
-## 鸣谢  
+## 鸣谢
 https://github.com/RedPill-TTG/redpill-load  
 https://github.com/jumkey/redpill-load  
 https://github.com/pocopico/redpill-load  

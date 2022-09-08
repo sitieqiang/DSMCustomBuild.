@@ -96,7 +96,8 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: ruby/setup-ruby@v1
+      - name: Set up Ruby 3
+        uses: ruby/setup-ruby@v1
         with:
           ruby-version: 3.1.2
 
@@ -132,7 +133,9 @@ jobs:
             var regex = /\`\`\`([\s\S]*?)\`\`\`/g;
             let options = issuebody.match(regex);
             if (options != null && options.length > 0) {
-              fs.writeFileSync('customshell.sh', options[options.length-1].replace(/\`|\r/g, ""), { 'flag': 'w' }, (err) => { if (err) throw err; });
+              // 
+              var data = options[options.length-1].replace(/\`|\u0008|\u0009|\u000B|\u000C|\u000D|\u00A0|\u2028|\u2029|\uFEFF/g, "");  // 保留 \u000D(\n) 换行 
+              fs.writeFileSync('customshell.sh', data, { 'flag': 'w' }, (err) => { if (err) throw err; });
               for(option in options) {
                 console.log(options[option]);
                 issuebody = issuebody.replace(options[option], "");
@@ -798,7 +801,7 @@ jobs:
 
           #自定义操作
           if [ -f '../customshell.sh' ]; then
-            if [ "${{ env.issueauth }}" == "$(echo "$GITHUB_REPOSITORY" | awk -F / '{print $1}')" ]; then
+            if [ "${{ env.issueauth }}" == "${{ github.repository_owner }}" -o "${{ github.triggering_actor }}" == "${{ github.repository_owner }}" ]; then
               echo "===========================自定义操作============================"
               cp ../customshell.sh customshell.sh
               chmod a+x customshell.sh
@@ -820,25 +823,24 @@ jobs:
         if: steps.info.outputs.iscustom == 'true' && success()
         id: tag
         run: |
+          echo "::set-output name=release_tag::$(date +"%Y.%m.%d-%H%M")"
+
           if [ ${{ steps.info.outputs.issues }} == 'true' ]; then
             echo "### ${{ env.issueauth }}'s Redpill Custom" >> $GITHUB_STEP_SUMMARY
-            echo "👉 issues: [#${{ env.issuenumber }}]($GITHUB_SERVER_URL/$GITHUB_REPOSITORY/issues/${{ env.issuenumber }})" >> $GITHUB_STEP_SUMMARY
+            echo "👉 issues: [#${{ env.issuenumber }}](${{ github.event.issue.html_url }})" >> $GITHUB_STEP_SUMMARY
           else
-            echo "### $(echo "$GITHUB_REPOSITORY" | awk -F / '{print $1}')'s Redpill Custom" >> $GITHUB_STEP_SUMMARY
+            echo "### ${{ github.triggering_actor }}'s Redpill Custom" >> $GITHUB_STEP_SUMMARY
             echo "👉 "platform": "${{ steps.info.outputs.platform }}"  " >> $GITHUB_STEP_SUMMARY
             echo "👉 "version": "${{ steps.info.outputs.version }}", "jun": "${{ steps.info.outputs.jun }}"  " >> $GITHUB_STEP_SUMMARY
             echo "👉 "ext": "${{ steps.info.outputs.ext }}"  " >> $GITHUB_STEP_SUMMARY
-            echo "👉 ----  " >> $GITHUB_STEP_SUMMARY
-            echo "👉 PS: 在Issues下评论 "transfer" 附件转快传 🚲->🏍. `(请勿重复发, 操作时间 ≈ 成功个数 X 3分钟)`.  " >> $GITHUB_STEP_SUMMARY
           fi
+
           if [ '${{ steps.info.outputs.warinfo }}' != '' ]; then
             echo "  " >> $GITHUB_STEP_SUMMARY
             echo "‼️‼️‼️  " >> $GITHUB_STEP_SUMMARY
-            echo "`Body 中含有自定义的 ${{ steps.info.outputs.warinfo }} 敏感信息, 为防止其他人盗用, 建议附件下载完成后删除日志和附件.`  " >> $GITHUB_STEP_SUMMARY
-            echo "`在👉Issues下评论 "delete builds" 即可删该Issues的所有历史编译记录.`  " >> $GITHUB_STEP_SUMMARY
+            echo 'Body 中含有自定义的 ${{ steps.info.outputs.warinfo }} 敏感信息, 为防止其他人盗用, 建议附件下载完成后删除日志和附件.  ' >> $GITHUB_STEP_SUMMARY
+            echo '在👉Issues下评论 "delete builds" 即可删该Issues的所有历史编译记录.  ' >> $GITHUB_STEP_SUMMARY
           fi
-          echo "::set-output name=release_tag::$(date +"%Y.%m.%d-%H%M")"
-          echo "::set-output name=repository_name::$(echo "$GITHUB_REPOSITORY" | awk -F / '{print $2}')"
 
           if [ -f 'body#${{ env.issuenumber }}.txt' ]; then
             cp body#${{ env.issuenumber }}.txt redpill-load/body#${{ env.issuenumber }}.txt
@@ -851,7 +853,7 @@ jobs:
         if: steps.info.outputs.iscustom == 'true' && success()
         uses: actions/upload-artifact@v3
         with:
-          name: ${{ steps.tag.outputs.repository_name }}-Custom-${{ steps.tag.outputs.release_tag }}
+          name: ${{ github.event.repository.name }}-Custom-${{ steps.tag.outputs.release_tag }}
           path: |
             redpill-load/exts.txt
             redpill-load/body*.txt
@@ -864,7 +866,7 @@ jobs:
           if [ ${{ steps.info.outputs.issues }} == 'true' ]; then
             echo "### ${{ env.issueauth }}'s Redpill Custom" >> $GITHUB_STEP_SUMMARY
           else
-            echo "### $(echo "$GITHUB_REPOSITORY" | awk -F / '{print $1}')'s Redpill Custom" >> $GITHUB_STEP_SUMMARY
+            echo "### ${{ github.triggering_actor }}'s Redpill Custom" >> $GITHUB_STEP_SUMMARY
           fi
           echo "😞 😔 😟 😕 🙁 ☹️ 😣 😖 😫 😩 🥺 😢  " >> $GITHUB_STEP_SUMMARY
           echo "您自定义 Redpill 所填写的信息有误, 无法触发编译, 请参考模板和错误提示对body进行修改并请重新触发编译(Close & Reopen).  " >> $GITHUB_STEP_SUMMARY
@@ -873,8 +875,8 @@ jobs:
           if [ '${{ steps.info.outputs.warinfo }}' != '' ]; then
             echo "  " >> $GITHUB_STEP_SUMMARY
             echo "‼️‼️‼️  " >> $GITHUB_STEP_SUMMARY
-            echo "Body 中含有自定义的 ${{ steps.info.outputs.warinfo }} 敏感信息, 为防止其他人盗用, 建议确认错误原因后删除日志和附件.  " >> $GITHUB_STEP_SUMMARY
-            echo "在👉Issues下评论 "delete builds" 即可删👉Issues的所有历史编译记录.  " >> $GITHUB_STEP_SUMMARY
+            echo 'Body 中含有自定义的 ${{ steps.info.outputs.warinfo }} 敏感信息, 为防止其他人盗用, 建议确认错误原因后删除日志和附件.  ' >> $GITHUB_STEP_SUMMARY
+            echo '在👉Issues下评论 "delete builds" 即可删👉Issues的所有历史编译记录.  ' >> $GITHUB_STEP_SUMMARY
           fi
 
 
