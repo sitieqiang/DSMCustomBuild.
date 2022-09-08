@@ -1,4 +1,6 @@
 # Redpill_CustomBuild
+ [![](https://img.shields.io/github/issues-search?label=%E5%AE%9A%E5%88%B6%E6%AC%A1%E6%95%B0&query=repo%3Awjz304%2FRedpill_CustomBuild%20label%3Acustom)](https://github.com/wjz304/Redpill_CustomBuild/issues?q=label%3Acustom)
+[![](https://img.shields.io/github/issues-search?label=%E6%AF%8F%E6%97%A5%E6%9E%84%E5%BB%BA&query=repo%3Awjz304%2FRedpill_CustomBuild%20label%3Aschedule)](https://github.com/wjz304/Redpill_CustomBuild/issues?q=label%3Aschedule)  
 
 ## 介绍  
 [Redpill_CustomBuild](https://github.com/wjz304/Redpill_CustomBuild)  
@@ -16,7 +18,7 @@
 [【👉快速创建】](https://wjz304.github.io/Redpill_CustomBuild/Issues.html)  
 [【👉快速创建】(dev)](https://wjz304.github.io/Redpill_CustomBuild/Issues.html?dev=1)  
 `普通模式默认使用pocopico的驱动库, dev模式默认使用我fork的驱动库(如果报 Checksum 错, 请尝试使用(dev)模式), `  
- 
+
 ## 使用  
 在本项目 Issues 中创建问题(符合下述规范), 按需填写即可发起定制构建[【👉图文说明】](https://github.com/wjz304/Redpill_CustomBuild/blob/main/guide/Issues.md).  
 
@@ -107,7 +109,7 @@ jun       | ×    |"0"             | 仅7.0.1-42218 版本可以选择jun模式�
 </details>  
 </br>
 
-## 鸣谢
+## 鸣谢  
 https://github.com/RedPill-TTG/redpill-load  
 https://github.com/jumkey/redpill-load  
 https://github.com/pocopico/redpill-load  
