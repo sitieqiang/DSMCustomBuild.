@@ -80,6 +80,7 @@ jobs:
                     for extdir in extdirs:
                         if extdir.startswith('.') or extdir.startswith('redpill'):
                             continue
+                        if extdir == 'eudev': continue  # 临时对策 
                         if os.path.isdir(os.path.join(root, work, extdir)):
                             data_index = getjsonfile(os.path.join(root, work, extdir, jext))
                             if data_index != None:
