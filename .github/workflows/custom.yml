@@ -33,7 +33,7 @@ on:
         default: '7.1.0-42661' 
         type: choice
         options:
-        - 7.1.1-42951
+        - 7.1.1-42962
         - 7.1.0-42661
         - 7.0.1-42218
         - 6.2.4-25556
@@ -264,7 +264,7 @@ jobs:
                     iscustom = 'false'
                     errinfo = 'platform 参数错误, 当前仅支持 {}.'.format(', '.join(platforms))
 
-                versions = ['7.1.1-42951', '7.1.0-42661', '7.0.1-42218', '6.2.4-25556']
+                versions = ['7.1.1-42962', '7.1.0-42661', '7.0.1-42218', '6.2.4-25556']
                 if iscustom == 'true' and not version in versions:
                     iscustom = 'false'
                     errinfo = 'version 参数错误, 当前仅支持 {}.'.format(', '.join(versions))
@@ -621,8 +621,8 @@ jobs:
             if [ "$2" == "42661" ]; then
               path=7.1/42661-1
             fi
-            if [ "$2" == "42951" ]; then
-              path=7.1.1/42951
+            if [ "$2" == "42962" ]; then
+              path=7.1.1/42962
             fi
             curl -L https://cndl.synology.cn/download/DSM/release/${path}/DSM_$1_$2.pat -o ds.pat
             if [ "$1" == "DVA1622" ]; then
