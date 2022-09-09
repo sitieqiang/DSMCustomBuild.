@@ -63,8 +63,11 @@ jobs:
 
             def pathstrsub(exp, reglist=[]):
                 ret = exp
-                for re in reglist:
-                    ret = ret.replace(re[0], re[1])
+                try:
+                    for re in reglist:
+                        ret = ret.replace(re[0], re[1])
+                except Exception as err:
+                    print(err)
                 return ret
 
             def getextslist(work = 'rp-ext', reglist=[]):
