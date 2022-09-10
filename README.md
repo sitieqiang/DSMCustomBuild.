@@ -30,7 +30,7 @@
 参数      | 必选  |     默认值     | 说明  
 ----------|------|----------------|---------
 platform  | √    |"DS918+"        | 选择你需要编译的型号. "DS918+", "DS920+", "DS1621+", "DS3615xs", "DS3617xs", "DS3622xs+", "DVA1622", "DVA3221"  
-version   | √    |"7.1.0-42661"   | 选择你需要编译的版本. "7.1.1-42962", "7.1.0-42661", "7.0.1-42218", "6.2.4-25556"  
+version   | √    |"7.0.1-42218"   | 选择你需要编译的版本. "7.1.1-42962", "7.1.0-42661", "7.0.1-42218", "6.2.4-25556"  
 config    | ×    |-               | 更新 user_config.json 参数 [①]  参考[#931](https://github.com/wjz304/Redpill_CustomBuild/issues/931)
 map       | ×    |-               | 控制器盘数(SataPortMap)和盘序(DiskIdxMap)两个字段, 并以","间隔. eg: "1,00"  
 dtb       | ×    |-               | dtb文件下载URL(support ext: .dts,.dtb,.tar.gz,.zip) [#47](https://github.com/wjz304/Redpill_CustomBuild/issues/47)

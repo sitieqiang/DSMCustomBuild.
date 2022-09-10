@@ -30,7 +30,7 @@ on:
       version:
         description: '请选择你需要编译的版本'
         required: true
-        default: '7.1.0-42661' 
+        default: '7.0.1-42218' 
         type: choice
         options:
         - 7.1.1-42962
@@ -204,7 +204,7 @@ jobs:
                 warinfo = ''
 
                 platform = 'DS3622xs+'
-                version = '7.1.0-42661'
+                version = '7.0.1-42218'
                 config = ''
                 map = ''
                 dtb = ''
