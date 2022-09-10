@@ -39,7 +39,7 @@ on:
         - 6.2.4-25556
         
       map: 
-        description: '请输入控制器盘数(SataPortMap)和盘序(DiskIdxMap)两个字段, 并以","间隔. eg: 0, 10'
+        description: '请输入控制器盘数(SataPortMap)和盘序(DiskIdxMap)两个字段, 并以","间隔. eg: 1,00'
         required: false
         default: ''
         type: string
@@ -284,7 +284,7 @@ jobs:
                         map = ','.join(maps)
                     else:
                         iscustom = 'false'
-                        errinfo = 'map 参数错误, 请填写控制器盘数(SataPortMap)和盘序(DiskIdxMap)两个字段(DiskIdxMap 的位数应该是 SataPortMap 的2倍), 并以","间隔. 比如: "0,10".'
+                        errinfo = 'map 参数错误, 请填写控制器盘数(SataPortMap)和盘序(DiskIdxMap)两个字段(DiskIdxMap 的位数应该是 SataPortMap 的2倍), 并以","间隔. 比如: "1,00".'
 
                 if iscustom == 'true' and dtb != '':
                     url = dtb
