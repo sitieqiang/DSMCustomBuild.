@@ -2359,6 +2359,7 @@
             "cxgb4",
             "cxgb4vf",
             "dm9601#",
+            "dtbpatch",
             "e1000",
             "e1000e",
             "forcedeth*",
