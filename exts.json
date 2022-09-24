@@ -2546,6 +2546,7 @@
             "cxgb4",
             "cxgb4vf",
             "dm9601",
+            "dtbpatch",
             "e1000",
             "e1000e",
             "forcedeth*",
@@ -3086,10 +3087,10 @@
         "ds1621p_42662": [
             "dtbpatch"
         ],
-        "ds2422p_42662": [
+        "ds2422p_42661": [
             "dtbpatch"
         ],
-        "ds2422p_42661": [
+        "ds2422p_42662": [
             "dtbpatch"
         ]
     },
