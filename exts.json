@@ -111,7 +111,7 @@
             "mpt2sas",
             "mpt3sas",
             "mptsas",
-            "mptspi",
+            "mptspi#",
             "mvsas",
             "nct6775",
             "qla2xxx",
