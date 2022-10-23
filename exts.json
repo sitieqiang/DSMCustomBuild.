@@ -2226,7 +2226,7 @@
             "sky2",
             "tcrp-diag",
             "tn40xx",
-            "v9fs",
+            "v9fs#",
             "via-rhine",
             "via-velocity#",
             "vmw_pvscsi",
