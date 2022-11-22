@@ -3626,6 +3626,11 @@
         "ds920p_42550": [
             "dtbpatch"
         ],
+        "ds923p_42962": [
+            "dtbpatch",
+            "mptspi",
+            "vmxnet3"
+        ],
         "ds918p_42951": [
             "forcedeth",
             "igc",
