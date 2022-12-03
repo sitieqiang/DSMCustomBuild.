@@ -8764,6 +8764,7 @@
         "ds923p_42962": [
             "dtb-patch",
             "dtbpatch",
+            "igc*",
             "mptspi",
             "vmxnet3"
         ],
