@@ -3626,6 +3626,9 @@
             "mptspi",
             "vmxnet3"
         ],
+        "sa6400_42962": [
+            "dtbpatch"
+        ],
         "ds918p_42951": [
             "forcedeth",
             "igc*",
