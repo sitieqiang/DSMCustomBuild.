@@ -3745,6 +3745,7 @@
             "igbvf",
             "ixgbe",
             "ixgbevf",
+            "maxdisks",
             "megaraid_sas",
             "mlx4_core*",
             "mlx5_core*",
@@ -3883,6 +3884,7 @@
             "igbvf",
             "ixgbe",
             "ixgbevf",
+            "maxdisks",
             "megaraid_sas",
             "mlx4_core",
             "mlx5_core*",
@@ -3953,6 +3955,7 @@
             "igbvf",
             "ixgbe",
             "ixgbevf",
+            "maxdisks",
             "megaraid_sas",
             "mlx4_core",
             "mpt2sas",
@@ -4021,6 +4024,7 @@
             "ixgbe",
             "ixgbe.vanilla",
             "ixgbevf",
+            "maxdisks",
             "megaraid_sas",
             "mlx4_core",
             "mlx5_core*",
@@ -4093,6 +4097,7 @@
             "igbvf",
             "ixgbe",
             "ixgbevf",
+            "maxdisks",
             "megaraid_sas",
             "mlx4_core",
             "mlx5_core*",
@@ -4163,6 +4168,7 @@
             "igbvf",
             "ixgbe",
             "ixgbevf",
+            "maxdisks",
             "megaraid_sas",
             "mlx4_core",
             "mlx5_core*",
@@ -4234,6 +4240,7 @@
             "igc*",
             "ixgbe",
             "ixgbevf",
+            "maxdisks",
             "megaraid_sas",
             "mlx4_core",
             "mlx5_core",
@@ -4304,6 +4311,7 @@
             "igc*",
             "ixgbe",
             "ixgbevf",
+            "maxdisks",
             "megaraid_sas",
             "mlx4_core",
             "mlx5_core",
@@ -4372,6 +4380,7 @@
             "igc*",
             "ixgbe",
             "ixgbevf",
+            "maxdisks",
             "megaraid_sas",
             "mlx4_core",
             "mlx5_core",
@@ -4444,6 +4453,7 @@
             "igc*",
             "ixgbe",
             "ixgbevf",
+            "maxdisks",
             "megaraid_sas",
             "mlx4_core",
             "mlx5_core",
@@ -4515,6 +4525,7 @@
             "igc*",
             "ixgbe",
             "ixgbevf",
+            "maxdisks",
             "megaraid_sas",
             "mlx4_core",
             "mlx5_core",
@@ -4585,6 +4596,7 @@
             "igc*",
             "ixgbe",
             "ixgbevf",
+            "maxdisks",
             "megaraid_sas",
             "mlx4_core",
             "mlx5_core",
@@ -4653,6 +4665,7 @@
             "igc*",
             "ixgbe",
             "ixgbevf",
+            "maxdisks",
             "megaraid_sas",
             "mlx4_core",
             "mlx5_core",
@@ -4721,6 +4734,7 @@
             "igc*",
             "ixgbe",
             "ixgbevf",
+            "maxdisks",
             "megaraid_sas",
             "mlx4_core",
             "mlx5_core",
@@ -4793,6 +4807,7 @@
             "igc*",
             "ixgbe",
             "ixgbevf",
+            "maxdisks",
             "megaraid_sas",
             "mlx4_core",
             "mlx5_core",
@@ -4864,6 +4879,7 @@
             "igc*",
             "ixgbe",
             "ixgbevf",
+            "maxdisks",
             "megaraid_sas",
             "mlx4_core",
             "mlx5_core",
@@ -4932,6 +4948,7 @@
             "igc*",
             "ixgbe",
             "ixgbevf",
+            "maxdisks",
             "megaraid_sas",
             "mlx4_core",
             "mpt2sas*",
@@ -4996,6 +5013,7 @@
             "igc*",
             "ixgbe",
             "ixgbevf",
+            "maxdisks",
             "megaraid_sas",
             "mlx4_core",
             "mpt2sas*",
@@ -5060,6 +5078,7 @@
             "igc*",
             "ixgbe",
             "ixgbevf",
+            "maxdisks",
             "megaraid_sas",
             "mlx4_core",
             "mpt2sas*",
@@ -5124,6 +5143,7 @@
             "igc*",
             "ixgbe",
             "ixgbevf",
+            "maxdisks",
             "megaraid_sas",
             "mlx4_core",
             "mpt2sas*",
@@ -5188,6 +5208,7 @@
             "igc*",
             "ixgbe",
             "ixgbevf",
+            "maxdisks",
             "megaraid_sas",
             "mlx4_core",
             "mpt2sas*",
@@ -6639,6 +6660,7 @@
             "igc*",
             "ixgbe",
             "ixgbevf",
+            "maxdisks",
             "megaraid_sas",
             "mlx4_core*",
             "mlx5_core",
@@ -6709,6 +6731,7 @@
             "igc*",
             "ixgbe",
             "ixgbevf",
+            "maxdisks",
             "megaraid_sas",
             "mlx4_core*",
             "mlx5_core",
@@ -6777,6 +6800,7 @@
             "igc*",
             "ixgbe",
             "ixgbevf",
+            "maxdisks",
             "megaraid_sas",
             "mlx4_core*",
             "mlx5_core",
@@ -6849,6 +6873,7 @@
             "igc*",
             "ixgbe",
             "ixgbevf",
+            "maxdisks",
             "megaraid_sas",
             "mlx4_core*",
             "mlx5_core",
@@ -6920,6 +6945,7 @@
             "igc*",
             "ixgbe",
             "ixgbevf",
+            "maxdisks",
             "megaraid_sas",
             "mlx4_core*",
             "mlx5_core",
@@ -6990,6 +7016,7 @@
             "igbvf",
             "ixgbe",
             "ixgbevf",
+            "maxdisks",
             "megaraid_sas",
             "mlx4_core",
             "mlx5_core",
@@ -7125,6 +7152,7 @@
             "igc*",
             "ixgbe",
             "ixgbevf",
+            "maxdisks",
             "megaraid_sas",
             "mlx4_core",
             "mlx5_core",
@@ -7194,6 +7222,7 @@
             "igc*",
             "ixgbe",
             "ixgbevf",
+            "maxdisks",
             "megaraid_sas",
             "mlx4_core",
             "mlx5_core",
@@ -7266,6 +7295,7 @@
             "igc*",
             "ixgbe",
             "ixgbevf",
+            "maxdisks",
             "megaraid_sas",
             "mlx4_core",
             "mlx5_core",
@@ -7336,6 +7366,7 @@
             "igc*",
             "ixgbe",
             "ixgbevf",
+            "maxdisks",
             "megaraid_sas",
             "mlx4_core",
             "mlx5_core",
@@ -8728,6 +8759,7 @@
         "ds918p_42951": [
             "forcedeth",
             "igc*",
+            "maxdisks",
             "mlx5_core",
             "netxen_nic",
             "powersched",
@@ -8737,10 +8769,65 @@
         "endofmodel": [
             "forcedeth*",
             "igc*",
+            "maxdisks*",
             "netxen_nic*",
             "powersched*",
             "rtc-cmos*",
             "tg3*"
+        ],
+        "ds918p_42550": [
+            "maxdisks"
+        ],
+        "ds1019p_42218": [
+            "maxdisks"
+        ],
+        "ds1019p_42550": [
+            "maxdisks"
+        ],
+        "ds1019p_42621": [
+            "maxdisks"
+        ],
+        "ds1019p_42661": [
+            "maxdisks"
+        ],
+        "ds1019p_42951": [
+            "maxdisks"
+        ],
+        "ds1019p_42962": [
+            "maxdisks"
+        ],
+        "ds3615xs_42550": [
+            "maxdisks"
+        ],
+        "ds3617xs_42550": [
+            "maxdisks"
+        ],
+        "ds3622xsp_42550": [
+            "maxdisks"
+        ],
+        "dva3219_42218": [
+            "maxdisks"
+        ],
+        "dva3219_42550": [
+            "maxdisks"
+        ],
+        "dva3219_42621": [
+            "maxdisks"
+        ],
+        "dva3219_42661": [
+            "maxdisks"
+        ],
+        "dva3219_42951": [
+            "maxdisks"
+        ],
+        "dva3219_42962": [
+            "maxdisks"
+        ],
+        "dva3221_42550": [
+            "maxdisks"
+        ],
+        "rs4021xsp_42550": [
+            "maxdisks"
         ]
     }
 }
