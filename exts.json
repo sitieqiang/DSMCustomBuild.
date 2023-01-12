@@ -3627,7 +3627,10 @@
             "vmxnet3"
         ],
         "sa6400_42962": [
-            "dtbpatch"
+            "dtbpatch",
+            "e1000",
+            "rtc-cmos",
+            "vmxnet3"
         ],
         "ds918p_42951": [
             "forcedeth",
