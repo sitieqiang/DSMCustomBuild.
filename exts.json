@@ -8757,7 +8757,17 @@
             "dtbpatch"
         ],
         "sa6400_42962": [
-            "dtbpatch"
+            "dtbpatch",
+            "e1000",
+            "e1000e",
+            "r8101",
+            "r8125",
+            "r8152",
+            "r8169",
+            "rtc-cmos",
+            "rtl8150",
+            "tg3",
+            "vmxnet3"
         ],
         "ds918p_42951": [
             "forcedeth",
