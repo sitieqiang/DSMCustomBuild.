@@ -3934,6 +3934,7 @@
             "8139too",
             "aacraid",
             "aic94xx",
+            "all-modules",
             "alx",
             "asix",
             "atl1",
@@ -3946,6 +3947,7 @@
             "bna",
             "bnx2",
             "bnx2x",
+            "cpuinfo",
             "cxgb",
             "cxgb3",
             "cxgb4",
@@ -4289,6 +4291,7 @@
             "8139too",
             "aacraid",
             "aic94xx",
+            "all-modules",
             "alx",
             "asix",
             "atl1",
@@ -4301,6 +4304,7 @@
             "bna",
             "bnx2",
             "bnx2x",
+            "cpuinfo",
             "cxgb",
             "cxgb3",
             "cxgb4",
@@ -4644,6 +4648,7 @@
             "8139too",
             "aacraid",
             "aic94xx",
+            "all-modules",
             "alx",
             "asix",
             "atl1",
@@ -4656,6 +4661,7 @@
             "bna",
             "bnx2",
             "bnx2x",
+            "cpuinfo",
             "cxgb",
             "cxgb3",
             "cxgb4",
@@ -5122,6 +5128,7 @@
             "8139too",
             "aacraid",
             "aic94xx",
+            "all-modules",
             "alx",
             "asix",
             "atl1",
@@ -5134,6 +5141,7 @@
             "bna",
             "bnx2",
             "bnx2x",
+            "cpuinfo",
             "cxgb",
             "cxgb3",
             "cxgb4",
@@ -5645,6 +5653,7 @@
             "8139too",
             "aacraid",
             "aic94xx",
+            "all-modules",
             "alx",
             "asix*",
             "atl1",
@@ -5657,6 +5666,7 @@
             "bna",
             "bnx2",
             "bnx2x",
+            "cpuinfo",
             "cxgb",
             "cxgb3",
             "cxgb4",
@@ -6000,6 +6010,7 @@
             "8139too",
             "aacraid",
             "aic94xx",
+            "all-modules",
             "alx",
             "asix*",
             "atl1",
@@ -6012,6 +6023,7 @@
             "bna",
             "bnx2",
             "bnx2x",
+            "cpuinfo",
             "cxgb",
             "cxgb3",
             "cxgb4",
@@ -6709,6 +6721,7 @@
             "8139too",
             "aacraid",
             "aic94xx",
+            "all-modules",
             "alx",
             "asix",
             "atl1",
@@ -6721,6 +6734,7 @@
             "bna",
             "bnx2",
             "bnx2x",
+            "cpuinfo",
             "cxgb",
             "cxgb3",
             "cxgb4",
@@ -7131,6 +7145,7 @@
             "8139too",
             "aacraid",
             "aic94xx",
+            "all-modules",
             "alx",
             "asix",
             "atl1",
@@ -7143,6 +7158,7 @@
             "bna",
             "bnx2",
             "bnx2x",
+            "cpuinfo",
             "cxgb",
             "cxgb3",
             "cxgb4",
@@ -7556,6 +7572,7 @@
             "8139too",
             "aacraid*",
             "aic94xx",
+            "all-modules",
             "alx",
             "asix",
             "atl1",
@@ -7568,6 +7585,7 @@
             "bna",
             "bnx2",
             "bnx2x",
+            "cpuinfo",
             "cxgb",
             "cxgb3",
             "cxgb4",
@@ -7835,6 +7853,7 @@
             "8139too",
             "aacraid*",
             "aic94xx",
+            "all-modules",
             "alx",
             "asix",
             "atl1",
@@ -7847,6 +7866,7 @@
             "bna",
             "bnx2",
             "bnx2x",
+            "cpuinfo",
             "cxgb",
             "cxgb3",
             "cxgb4",
@@ -8035,6 +8055,7 @@
             "8139too",
             "aacraid",
             "aic94xx",
+            "all-modules",
             "alx",
             "asix*",
             "atl1",
@@ -8047,6 +8068,7 @@
             "bna",
             "bnx2",
             "bnx2x",
+            "cpuinfo",
             "cxgb",
             "cxgb3",
             "cxgb4",
@@ -8481,6 +8503,7 @@
             "8139too",
             "aacraid*",
             "aic94xx",
+            "all-modules",
             "alx",
             "asix",
             "atl1",
@@ -8493,6 +8516,7 @@
             "bna",
             "bnx2",
             "bnx2x",
+            "cpuinfo",
             "cxgb",
             "cxgb3",
             "cxgb4",
@@ -8731,6 +8755,61 @@
             "vxge",
             "wch*"
         ],
+        "ds1019p_42962": [
+            "all-modules",
+            "cpuinfo",
+            "maxdisks"
+        ],
+        "ds1621xsp_42962": [
+            "all-modules",
+            "cpuinfo"
+        ],
+        "rs3413xsp_42962": [
+            "all-modules",
+            "cpuinfo"
+        ],
+        "rs3618xs_42962": [
+            "all-modules",
+            "cpuinfo"
+        ],
+        "dva3219_42962": [
+            "all-modules",
+            "cpuinfo",
+            "maxdisks"
+        ],
+        "ds923p_42962": [
+            "all-modules",
+            "cpuinfo",
+            "dtb-patch",
+            "dtbpatch",
+            "igc*",
+            "mptspi",
+            "vmxnet3"
+        ],
+        "ds723p_42962": [
+            "all-modules",
+            "cpuinfo"
+        ],
+        "sa6400_42962": [
+            "all-modules",
+            "dtbpatch",
+            "e1000",
+            "e1000e",
+            "igb",
+            "r8101#",
+            "r8125#",
+            "r8152",
+            "r8168",
+            "r8169",
+            "rtc-cmos",
+            "rtl8150#",
+            "tg3",
+            "vmxnet3"
+        ],
+        "zendofmodel": [
+            "all-modules*",
+            "cpuinfo*"
+        ],
         "ds3615xs_25556u2": [
             "dtb-patch",
             "tcrp-diag"
@@ -8747,31 +8826,11 @@
             "dtb-patch",
             "tcrp-diag"
         ],
-        "ds923p_42962": [
-            "dtb-patch",
-            "dtbpatch",
-            "igc*",
-            "mptspi",
-            "vmxnet3"
-        ],
         "ds920p_42550": [
             "dtbpatch"
         ],
         "ds1520p_42550": [
             "dtbpatch"
-        ],
-        "sa6400_42962": [
-            "dtbpatch",
-            "e1000",
-            "e1000e",
-            "r8101",
-            "r8125",
-            "r8152",
-            "r8169",
-            "rtc-cmos",
-            "rtl8150",
-            "tg3",
-            "vmxnet3"
         ],
         "ds918p_42951": [
             "forcedeth",
@@ -8810,9 +8869,6 @@
         "ds1019p_42951": [
             "maxdisks"
         ],
-        "ds1019p_42962": [
-            "maxdisks"
-        ],
         "ds3615xs_42550": [
             "maxdisks"
         ],
@@ -8835,9 +8891,6 @@
             "maxdisks"
         ],
         "dva3219_42951": [
-            "maxdisks"
-        ],
-        "dva3219_42962": [
             "maxdisks"
         ],
         "dva3221_42550": [
