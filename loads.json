@@ -155,12 +155,7 @@
         "SA6400": [
             "7.1.1-42962",
             "7.2.0-64216"
-        ],
-        "file": [],
-        "files-chksum": [],
-        "replicate-config.sh": [],
-        "update-configs.sh": [],
-        "update-configs2.sh": []
+        ]
     },
     "pocopico_jun": {
         "DS1621+": [
